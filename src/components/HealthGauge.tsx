@@ -18,18 +18,18 @@ export const HealthGauge: React.FC<HealthGaugeProps> = ({
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (boundedScore / 100) * circumference;
 
-  let color = '#EF4444'; // Red
+  let color = '#DC2626'; // Critical Red
   let statusText = 'Critical Attention Needed';
-  let badgeBg = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+  let badgeBg = 'bg-rose-50 text-rose-700 border-rose-200';
 
   if (boundedScore >= 80) {
-    color = '#10B981'; // Emerald Green
+    color = '#16A34A'; // Success Green
     statusText = 'Optimal Health & Ready';
-    badgeBg = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+    badgeBg = 'bg-emerald-50 text-emerald-700 border-emerald-200';
   } else if (boundedScore >= 60) {
-    color = '#F59E0B'; // Amber Orange
-    statusText = 'Fair / Optimization Required';
-    badgeBg = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+    color = '#F59E0B'; // Warning Amber
+    statusText = 'Optimization Required';
+    badgeBg = 'bg-amber-50 text-amber-700 border-amber-200';
   }
 
   return (
@@ -41,7 +41,7 @@ export const HealthGauge: React.FC<HealthGaugeProps> = ({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="#1E293B"
+            stroke="#E2E8F0"
             strokeWidth={strokeWidth}
             fill="transparent"
           />
@@ -62,21 +62,20 @@ export const HealthGauge: React.FC<HealthGaugeProps> = ({
 
         {/* Center score readout */}
         <div className="absolute flex flex-col items-center justify-center text-center">
-          <span className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          <span className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
             {boundedScore}
           </span>
-          <span className="text-xs uppercase font-medium text-slate-400 tracking-wider mt-0.5">
+          <span className="text-[11px] uppercase font-bold text-slate-400 tracking-wider mt-0.5">
             Out of 100
           </span>
         </div>
       </div>
 
       {showLabel && (
-        <div className={`mt-3 px-3 py-1 rounded-full text-xs font-semibold border ${badgeBg}`}>
+        <div className={`mt-3 px-3.5 py-1 rounded-full text-xs font-semibold border ${badgeBg}`}>
           {statusText}
         </div>
       )}
     </div>
   );
 };
-

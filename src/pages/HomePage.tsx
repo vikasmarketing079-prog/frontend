@@ -11,13 +11,22 @@ import {
   FileCode2,
   FileText,
   ArrowRight,
-  CheckCircle,
-  HelpCircle,
-  BarChart3,
-  TrendingUp,
+  CheckCircle2,
+  AlertCircle,
   AlertTriangle,
+  Info,
+  Check,
   Layers,
   ChevronDown,
+  Globe,
+  Activity,
+  BarChart2,
+  ExternalLink,
+  Laptop,
+  Briefcase,
+  Code2,
+  Building2,
+  TrendingUp,
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -27,6 +36,7 @@ export const HomePage: React.FC = () => {
   const [error, setError] = useState('');
   const [activeScan, setActiveScan] = useState<any>(null);
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
+  const [sampleTab, setSampleTab] = useState<'all' | 'seo' | 'performance' | 'security'>('all');
 
   const handleStartAudit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,212 +90,336 @@ export const HomePage: React.FC = () => {
   const categories = [
     {
       icon: Search,
-      title: 'SEO Audit',
-      color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
-      description: 'Find missing/duplicate titles, bad H1s, canonical mismatches, missing image alt tags, OG metadata, and schema JSON-LD.',
+      title: 'SEO Analysis',
+      bullets: ['Meta tags & title lengths', 'Heading structure (H1-H6)', 'Canonical tags & sitemaps', 'Indexability directives'],
+      description: 'Find title tag defects, missing descriptions, heading hierarchy issues, and canonical mismatches.',
+      toolLink: '/tools/seo',
     },
     {
       icon: Zap,
-      title: 'Performance & Web Vitals',
-      color: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
-      description: 'Measure TTFB, LCP, FCP, CLS, uncompressed assets, missing gzip/brotli, render-blocking JS, and oversized images.',
+      title: 'Performance Analysis',
+      bullets: ['Core Web Vitals (FCP, LCP, CLS)', 'Page load speed & TTFB', 'Image compression (WebP/AVIF)', 'Resource & script blocking'],
+      description: 'Analyze real page load bottlenecks, uncompressed images, missing cache headers, and render-blocking scripts.',
+      toolLink: '/tools/speed',
     },
     {
       icon: Smartphone,
-      title: 'Mobile Responsiveness',
-      color: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
-      description: 'Inspect 375px mobile & 768px tablet viewports for horizontal overflow, clipped text, and undersized tap targets.',
+      title: 'Mobile Experience',
+      bullets: ['375px & 768px viewports', 'Horizontal overflow bugs', 'Mobile viewport meta tag', 'Small touch target sizes'],
+      description: 'Inspect pages across mobile and tablet viewports to uncover layout overflow and tap target issues.',
+      toolLink: '/tools/mobile',
     },
     {
       icon: ShieldCheck,
-      title: 'Security Configuration',
-      color: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
-      description: 'Non-invasive TLS cert inspection, HSTS, CSP, X-Frame clickjacking defense, mixed content, and cookie flags.',
+      title: 'Security Analysis',
+      bullets: ['TLS/SSL certificate expiry', 'HTTPS redirect enforcement', 'HSTS, CSP & X-Frame headers', 'Mixed content detection'],
+      description: 'Verify certificate validity, HTTPS redirection, critical HTTP defense headers, and cookie security flags.',
+      toolLink: '/tools/security-headers',
+    },
+    {
+      icon: FileCode2,
+      title: 'Technical Analysis',
+      bullets: ['HTTP response codes (4xx, 5xx)', 'Redirect chains & loops', 'Canonical URL consistency', 'Robots.txt & XML sitemaps'],
+      description: 'Check status codes, server response times, URL cleanliness, sitemap health, and crawler permissions.',
+      toolLink: '/tools/seo',
     },
     {
       icon: Link2,
-      title: 'Broken Links Audit',
-      color: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
-      description: 'Discover internal 404s, dead outbound links, redirect chains, and broken images with exact source pages.',
-    },
-    {
-      icon: FileText,
-      title: 'Content & Technical Health',
-      color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
-      description: 'Detect thin content indicators, missing HTML lang tags, robots.txt blocks, XML sitemaps, and HTTP status errors.',
+      title: 'Broken Links',
+      bullets: ['Internal dead ends (404)', 'Broken external links', 'Missing image assets', 'Redirect status codes'],
+      description: 'Discover dead internal hyperlinks, broken outbound destinations, and failed image references.',
+      toolLink: '/tools/broken-links',
     },
   ];
 
   const faqs = [
     {
-      q: 'How does SiteAudit Pro differ from basic SEO tools?',
-      a: 'Unlike simple single-page checkers that only look at meta tags, SiteAudit Pro runs a full multi-page crawler with native DNS inspection, SSL certificate validation, mobile viewport overflow detection across multiple breakpoints, and server-side Core Web Vitals diagnostics.',
+      q: 'What is SiteAudit Pro?',
+      a: 'SiteAudit Pro is a comprehensive website health auditing platform. It crawls your website and runs multi-category diagnostics covering SEO, Core Web Vitals performance, mobile usability, security configuration, and broken links, delivering an actionable, prioritized remediation plan.',
     },
     {
-      q: 'Will running an audit slow down or harm my website?',
-      a: 'Never. SiteAudit Pro uses safe, non-invasive HTTP inspection and Playwright headless rendering with respectful rate limiting (polite 150ms delays) and SSRF safety protection. It never performs exploit testing or brute-force requests.',
+      q: 'How does website auditing work?',
+      a: 'When you submit a URL, our BFS crawling engine reads your robots.txt and sitemap, discovers accessible internal pages, and performs safe diagnostic checks against each page for network response times, HTML structure, mobile viewport responsiveness, and security headers.',
     },
     {
-      q: 'Can I download and share white-label PDF reports with clients?',
-      a: 'Yes! Agency tier subscribers can customize PDF reports with their own agency logo, custom brand color, and personalized footer notes, making it ready to present directly to clients.',
-    },
-    {
-      q: 'How is the Website Health Score calculated?',
-      a: 'Health Scores are calculated from actual diagnostic test results across 6 weighted categories: SEO (25%), Performance (25%), Mobile Readiness (20%), Security (15%), Technical Setup (10%), and Content (5%).',
+      q: 'Does it scan the entire website?',
+      a: 'Yes. Unlike single-page checkers, SiteAudit Pro crawls across internal pages up to your plan limit (10 pages on Free, 100 on Pro, and 500 on Agency) to find hidden site-wide issues.',
     },
     {
       q: 'Is the free website audit really free?',
       a: 'Yes! You can enter any accessible website URL and receive a free comprehensive audit of up to 10 discovered pages with an interactive prioritized action plan and downloadable PDF.',
     },
+    {
+      q: 'How are website health scores calculated?',
+      a: 'Health Scores (0–100) are calculated from actual test results across 6 weighted categories: SEO (25%), Performance (25%), Mobile Readiness (20%), Security (15%), Technical Setup (10%), and Content Structure (5%).',
+    },
+    {
+      q: 'Can I download the audit report?',
+      a: 'Yes. You can download a high-resolution, multi-page vector PDF report containing executive score cards, prioritized action steps, and page-by-page findings. Agency subscribers can also apply white-label branding with their custom logo and colors.',
+    },
+    {
+      q: 'How often should I audit my website?',
+      a: 'We recommend auditing your website at least once a week or after every major content update or software deployment. Pro and Agency tiers include automated recurring weekly monitoring with email notifications.',
+    },
+    {
+      q: 'Does the audit make changes to my website?',
+      a: 'No. SiteAudit Pro only performs safe, read-only HTTP and browser-based inspections. It never modifies your files, database, or server configurations.',
+    },
   ];
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Background radial gradient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[550px] bg-gradient-to-b from-blue-600/15 via-blue-900/10 to-transparent blur-3xl pointer-events-none" />
-
-      {/* Hero Section */}
-      <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Headline */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] max-w-5xl mx-auto">
-          Know What’s Wrong With Your Website.{' '}
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-blue-500">
-            Fix It Before Your Customers Notice.
-          </span>
-        </h1>
-
-        <p className="mt-5 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          Instant SEO, speed, mobile, and security audit in one actionable report.
-        </p>
-
-        {/* Audit URL Input Form */}
-        <div className="mt-8 max-w-2xl mx-auto">
-          <form onSubmit={handleStartAudit} className="relative flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                <Search className="w-5 h-5 text-blue-400" />
-              </div>
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="Enter website URL (e.g., example.com)"
-                disabled={loading}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-[#0B132B] border border-slate-700 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base transition shadow-xl shadow-black/40"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="py-4 px-8 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold text-base shadow-xl shadow-blue-600/30 hover:shadow-blue-600/50 transition flex items-center justify-center gap-2 group whitespace-nowrap disabled:opacity-50"
-            >
-              <span>{loading ? 'Auditing...' : 'Start Free Audit'}</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </form>
-
-          {error && (
-            <div className="mt-3 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs sm:text-sm text-left flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* Quick Demo link */}
-          <div className="mt-4 flex items-center justify-center gap-4 text-xs text-slate-400">
-            <span>Free crawl limit: 10 pages</span>
-            <span>•</span>
-            <Link to="/demo" className="text-blue-400 hover:underline flex items-center gap-1 font-medium">
-              <span>View live sample report</span>
-              <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        </div>
-
-        {/* Live scanning progress display */}
-        {loading && activeScan && (
-          <div className="mt-10 max-w-3xl mx-auto text-left animate-in fade-in">
-            <ScanProgressBar
-              progressPercent={activeScan.progressPercent || 25}
-              status={activeScan.status || 'crawling'}
-              stepMessage={activeScan.currentStepMessage}
-              pagesDiscovered={activeScan.pagesDiscovered}
-              pagesScanned={activeScan.pagesScanned}
-            />
-          </div>
-        )}
-      </section>
-
-      {/* How Auditing Works (Live-style transparent explanation) */}
-      <section className="py-16 bg-[#0B132B]/50 border-y border-slate-800">
+    <div className="bg-white text-slate-900">
+      {/* 4. HERO SECTION - SPLIT LAYOUT */}
+      <section className="relative pt-12 pb-20 md:pt-16 md:pb-24 border-b border-slate-200/80 bg-gradient-to-b from-slate-50/60 to-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h2 className="text-xs uppercase font-bold tracking-widest text-blue-400 mb-2">
-              Engine Mechanics
-            </h2>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-              How the SiteAudit Pro Analysis Pipeline Operates
-            </h3>
-            <p className="mt-3 text-slate-400 text-sm">
-              We never fabricate dummy scores or simulated statistics. Here is the verified 4-stage pipeline that audits every accessible page:
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            
+            {/* LEFT SIDE - CONTENT */}
+            <div className="lg:col-span-7 space-y-6">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold tracking-wide uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                <span>Website Intelligence Platform</span>
+              </div>
+
+              {/* Main Headline */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+                Your Website Has Problems.{' '}
+                <span className="text-blue-600">
+                  Let's Find Every One.
+                </span>
+              </h1>
+
+              {/* Supporting Description */}
+              <p className="text-base sm:text-lg text-slate-600 max-w-xl leading-relaxed">
+                Scan your website for SEO issues, broken links, performance problems, mobile usability, and security weaknesses. Get a clear report with actionable solutions.
+              </p>
+
+              {/* URL Input Scanner Form */}
+              <div className="pt-2 max-w-xl">
+                <form onSubmit={handleStartAudit} className="flex flex-col sm:flex-row gap-2.5">
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                      <Search className="w-4 h-4 text-slate-400" />
+                    </div>
+                    <input
+                      type="text"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      placeholder="Enter your website URL (e.g. https://example.com)"
+                      disabled={loading}
+                      className="w-full pl-10 pr-4 py-3.5 rounded-xl bg-white border border-slate-300 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition shadow-sm"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm hover:shadow transition flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-50"
+                  >
+                    <span>{loading ? 'Analyzing...' : 'Analyze My Website'}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </form>
+
+                {error && (
+                  <div className="mt-3 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 flex-shrink-0 text-rose-500" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Free scan • No credit card required • Up to 10 pages</span>
+                </div>
+
+                <div className="mt-2 text-[11px] text-slate-400">
+                  Built for website owners, developers, and digital agencies.
+                </div>
+              </div>
+
+              {/* Real-time scan progress if active */}
+              {loading && activeScan && (
+                <div className="pt-4 max-w-xl">
+                  <ScanProgressBar
+                    progressPercent={activeScan.progressPercent || 25}
+                    status={activeScan.status || 'crawling'}
+                    stepMessage={activeScan.currentStepMessage}
+                    pagesDiscovered={activeScan.pagesDiscovered}
+                    pagesScanned={activeScan.pagesScanned}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* RIGHT SIDE - CUSTOM-DESIGNED DASHBOARD PREVIEW */}
+            <div className="lg:col-span-5">
+              <div className="relative">
+                {/* Subtle soft backdrop accent */}
+                <div className="absolute -inset-1 bg-gradient-to-tr from-blue-100 to-indigo-50 rounded-3xl blur-xl opacity-70"></div>
+
+                <div className="relative bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xl shadow-slate-200/50 space-y-5">
+                  {/* Dashboard Header Bar */}
+                  <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                      <span className="text-xs font-semibold text-slate-800">https://mybrandstore.com</span>
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+                      Sample Audit Preview
+                    </span>
+                  </div>
+
+                  {/* Top Stats: Score + Issues */}
+                  <div className="grid grid-cols-2 gap-4 items-center">
+                    {/* Score Circle Card */}
+                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-3.5">
+                      <div className="relative flex items-center justify-center w-14 h-14">
+                        <svg className="w-14 h-14 transform -rotate-90">
+                          <circle cx="28" cy="28" r="23" stroke="#E2E8F0" strokeWidth="5" fill="transparent" />
+                          <circle
+                            cx="28"
+                            cy="28"
+                            r="23"
+                            stroke="#16A34A"
+                            strokeWidth="5"
+                            strokeDasharray="144.5"
+                            strokeDashoffset="18"
+                            strokeLinecap="round"
+                            fill="transparent"
+                          />
+                        </svg>
+                        <span className="absolute text-sm font-black text-slate-900">87</span>
+                      </div>
+                      <div>
+                        <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Health Score</div>
+                        <div className="text-xs font-bold text-emerald-700">Optimal (87/100)</div>
+                      </div>
+                    </div>
+
+                    {/* Issues pill grid */}
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-100 font-medium">
+                        <span>3 Critical Issues</span>
+                        <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
+                      </div>
+                      <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-100 font-medium">
+                        <span>5 Warnings</span>
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                      </div>
+                      <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100 font-medium">
+                        <span>4 Recommendations</span>
+                        <Info className="w-3.5 h-3.5 text-blue-600" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Category Progress Bars */}
+                  <div className="space-y-3 pt-2">
+                    <div>
+                      <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                        <span className="flex items-center gap-1.5">
+                          <Search className="w-3.5 h-3.5 text-slate-400" /> SEO Score
+                        </span>
+                        <span className="font-bold text-slate-900">92/100</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-emerald-600 h-full rounded-full w-[92%]"></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                        <span className="flex items-center gap-1.5">
+                          <Zap className="w-3.5 h-3.5 text-slate-400" /> Performance
+                        </span>
+                        <span className="font-bold text-slate-900">78/100</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-amber-500 h-full rounded-full w-[78%]"></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                        <span className="flex items-center gap-1.5">
+                          <Smartphone className="w-3.5 h-3.5 text-slate-400" /> Mobile Usability
+                        </span>
+                        <span className="font-bold text-slate-900">95/100</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-emerald-600 h-full rounded-full w-[95%]"></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                        <span className="flex items-center gap-1.5">
+                          <ShieldCheck className="w-3.5 h-3.5 text-slate-400" /> Security
+                        </span>
+                        <span className="font-bold text-slate-900">84/100</span>
+                      </div>
+                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-emerald-600 h-full rounded-full w-[84%]"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Recent Audit Info Footer */}
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                    <span>10 Pages Scanned • 12 Issues Found</span>
+                    <Link to="/demo" className="text-blue-600 hover:underline font-semibold flex items-center gap-1">
+                      <span>View Live Report</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="p-6 rounded-2xl bg-[#060B18] border border-slate-800">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold font-mono text-base mb-4">
-                01
-              </div>
-              <h4 className="text-base font-bold text-white mb-2">SSRF & Network Check</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                We resolve target DNS records, verify SSL certificate expiry dates, check HTTP to HTTPS redirection, and protect private network ranges.
-              </p>
+      {/* 5. TRUST AND METRICS SECTION */}
+      <section className="py-8 bg-slate-50/80 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+            <div className="flex items-center justify-center gap-2 text-slate-700 font-semibold text-xs sm:text-sm">
+              <Search className="w-4 h-4 text-blue-600" />
+              <span>SEO Analysis</span>
             </div>
-
-            <div className="p-6 rounded-2xl bg-[#060B18] border border-slate-800">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold font-mono text-base mb-4">
-                02
-              </div>
-              <h4 className="text-base font-bold text-white mb-2">BFS Page Crawling</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                The crawler reads robots.txt and XML sitemaps, traverses internal hyperlinks, normalizes URL structures, and deduplicates canonical paths.
-              </p>
+            <div className="flex items-center justify-center gap-2 text-slate-700 font-semibold text-xs sm:text-sm">
+              <Zap className="w-4 h-4 text-amber-500" />
+              <span>Website Performance</span>
             </div>
-
-            <div className="p-6 rounded-2xl bg-[#060B18] border border-slate-800">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center font-bold font-mono text-base mb-4">
-                03
-              </div>
-              <h4 className="text-base font-bold text-white mb-2">7 Diagnostic Modules</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Each page is audited for on-page SEO, Core Web Vitals, mobile horizontal overflow at 375px/768px, security headers, dead links, and content quality.
-              </p>
+            <div className="flex items-center justify-center gap-2 text-slate-700 font-semibold text-xs sm:text-sm">
+              <Smartphone className="w-4 h-4 text-purple-600" />
+              <span>Mobile Experience</span>
             </div>
-
-            <div className="p-6 rounded-2xl bg-[#060B18] border border-slate-800">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold font-mono text-base mb-4">
-                04
-              </div>
-              <h4 className="text-base font-bold text-white mb-2">Prioritized Action Plan</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Issues are ranked by severity (Critical, High, Medium, Low) with exact evidence, technical rationale, and copy-paste recommendations.
-              </p>
+            <div className="flex items-center justify-center gap-2 text-slate-700 font-semibold text-xs sm:text-sm">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>Security Checks</span>
+            </div>
+            <div className="col-span-2 md:col-span-1 flex items-center justify-center gap-2 text-slate-700 font-semibold text-xs sm:text-sm">
+              <FileCode2 className="w-4 h-4 text-sky-600" />
+              <span>Technical Health</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Audit Categories Grid */}
+      {/* 6. WEBSITE AUDIT CATEGORIES */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-xs uppercase font-bold tracking-widest text-blue-400 mb-2">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
             Coverage
           </h2>
-          <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Every Critical Aspect of Your Website, Diagnosed
+          <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Everything Your Website Needs to Perform Better
           </h3>
-          <p className="mt-4 text-slate-400 text-base">
-            SiteAudit Pro investigates 40+ vital signals across 7 specialized audit modules.
+          <p className="mt-3 text-slate-600 text-sm leading-relaxed">
+            SiteAudit Pro investigates 40+ vital signals across 6 core audit modules.
           </p>
         </div>
 
@@ -295,284 +429,449 @@ export const HomePage: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="p-6 rounded-2xl bg-[#0B132B]/80 border border-slate-800 hover:border-slate-700 transition hover:bg-slate-800/40"
+                className="p-6 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-lg transition-all flex flex-col justify-between"
               >
-                <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mb-5 ${cat.color}`}>
-                  <Icon className="w-6 h-6" />
+                <div>
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 border border-blue-100">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h4 className="text-base font-bold text-slate-900 mb-2">{cat.title}</h4>
+                  <p className="text-xs text-slate-500 mb-4 leading-relaxed">{cat.description}</p>
+                  
+                  <ul className="space-y-1.5 text-xs text-slate-600 mb-6">
+                    {cat.bullets.map((b, bIdx) => (
+                      <li key={bIdx} className="flex items-center gap-2">
+                        <Check className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h4 className="text-lg font-bold text-white mb-2">{cat.title}</h4>
-                <p className="text-sm text-slate-400 leading-relaxed">{cat.description}</p>
+
+                <Link
+                  to={cat.toolLink}
+                  className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 group pt-2 border-t border-slate-100"
+                >
+                  <span>Explore {cat.title.split(' ')[0]} Tool</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* Clearly-Labeled Demonstration Report Banner */}
-      <section className="py-16 bg-gradient-to-r from-blue-950/40 via-slate-900 to-blue-950/40 border-y border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold mb-3">
-              <FileText className="w-3.5 h-3.5" />
-              <span>Interactive Demonstration</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
-              Explore a Full Interactive Audit Report
+      {/* 7. HOW IT WORKS */}
+      <section className="py-20 bg-slate-50 border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+              Workflow
+            </h2>
+            <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              How SiteAudit Pro Works
             </h3>
-            <p className="mt-2 text-slate-400 text-sm leading-relaxed">
-              Want to see what an audit looks like before scanning your site? Browse our comprehensive sample report complete with health scoring, Web Vitals, mobile viewport findings, and prioritized action plan.
+            <p className="mt-3 text-slate-600 text-sm">
+              Three streamlined steps to uncover and resolve every website bottleneck.
             </p>
           </div>
-          <div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm relative">
+              <div className="text-2xl font-black text-blue-600 font-mono mb-3">01</div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Enter Your Website</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Submit your website URL to start the audit. We validate DNS records, SSL handshakes, and robots.txt.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm relative">
+              <div className="text-2xl font-black text-blue-600 font-mono mb-3">02</div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Deep Website Analysis</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Our audit engine crawls accessible pages and identifies real website issues across SEO, speed, mobile, and security.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-2xl bg-white border border-slate-200 shadow-sm relative">
+              <div className="text-2xl font-black text-blue-600 font-mono mb-3">03</div>
+              <h4 className="text-base font-bold text-slate-900 mb-2">Get Your Action Plan</h4>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Receive a detailed report with problems, priorities, and solutions. Download a PDF or export to CSV.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. SAMPLE AUDIT REPORT PREVIEW */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+            Sample Output
+          </h2>
+          <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            See Exactly What's Happening Inside Your Website
+          </h3>
+          <p className="mt-3 text-slate-600 text-sm">
+            Realistic demonstration report generated by our multi-module diagnostic engine.
+          </p>
+        </div>
+
+        {/* Interactive Sample Report Card */}
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-900/5">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-slate-100 gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono font-bold text-slate-400">AUDIT REPORT</span>
+                <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                  Demo Data
+                </span>
+              </div>
+              <h4 className="text-xl font-bold text-slate-900 mt-1">demo-ecommerce-store.example.com</h4>
+            </div>
+
             <Link
               to="/demo"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-xl shadow-blue-600/30 transition whitespace-nowrap"
+              className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition flex items-center gap-1.5"
             >
-              <span>Open Sample Audit Report</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>Explore Sample Report</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* Quick Metrics Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 py-6 border-b border-slate-100 text-center">
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span className="text-[11px] text-slate-400 block font-medium">Health Score</span>
+              <span className="text-xl font-black text-emerald-600">74/100</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span className="text-[11px] text-slate-400 block font-medium">Total Issues</span>
+              <span className="text-xl font-black text-slate-900">31</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span className="text-[11px] text-rose-500 block font-medium">Critical Errors</span>
+              <span className="text-xl font-black text-rose-600">3</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span className="text-[11px] text-amber-500 block font-medium">Warnings</span>
+              <span className="text-xl font-black text-amber-600">7</span>
+            </div>
+            <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 col-span-2 sm:col-span-1">
+              <span className="text-[11px] text-emerald-500 block font-medium">Passed Checks</span>
+              <span className="text-xl font-black text-emerald-600">24</span>
+            </div>
+          </div>
+
+          {/* Sample Issues Rows */}
+          <div className="pt-6 space-y-3">
+            <div className="p-4 rounded-xl border border-rose-200 bg-rose-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-rose-100 text-rose-700">
+                    Critical
+                  </span>
+                  <span className="text-xs font-bold text-slate-900">Broken Internal 404 Link on Checkout Button</span>
+                </div>
+                <p className="text-xs text-slate-600">Affected page: /cart • Destination /checkout-v2 returned HTTP 404 Not Found.</p>
+              </div>
+              <span className="text-xs font-semibold text-rose-700 whitespace-nowrap">Fix: Redirect to /checkout</span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-100 text-amber-700">
+                    Warning
+                  </span>
+                  <span className="text-xs font-bold text-slate-900">Missing Meta Descriptions on Product Pages</span>
+                </div>
+                <p className="text-xs text-slate-600">Affected page: /products/all • Search engines generating automated unoptimized snippets.</p>
+              </div>
+              <span className="text-xs font-semibold text-amber-700 whitespace-nowrap">Fix: Add 120-155 char meta tag</span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-blue-200 bg-blue-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-100 text-blue-700">
+                    Notice
+                  </span>
+                  <span className="text-xs font-bold text-slate-900">Oversized Hero Banner (3.8 MB PNG) Delaying LCP</span>
+                </div>
+                <p className="text-xs text-slate-600">Affected page: / • Image format should be converted to modern WebP or AVIF.</p>
+              </div>
+              <span className="text-xs font-semibold text-blue-700 whitespace-nowrap">Fix: Compress to WebP (~85% savings)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. PRIORITY FIX SECTION */}
+      <section className="py-20 bg-slate-50 border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+              Actionable Insights
+            </h2>
+            <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              Don't Just Find Problems. Know How to Fix Them.
+            </h3>
+            <p className="mt-3 text-slate-600 text-sm">
+              Every issue is delivered with its affected URL, evidence, why it matters, and a clear recommended fix.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+              <div className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-700 border border-rose-200">
+                Critical Priority
+              </div>
+              <h4 className="text-base font-bold text-slate-900">Missing H1 Heading Tag</h4>
+              <p className="text-xs font-mono text-slate-400">Affected URL: /services</p>
+              <div className="text-xs text-slate-600 pt-2 border-t border-slate-100 space-y-2">
+                <p><strong>Why it matters:</strong> Without an H1 heading, crawlers and assistive readers cannot determine the primary subject of your document.</p>
+                <p className="text-emerald-700 font-semibold bg-emerald-50 p-2.5 rounded-lg border border-emerald-100">
+                  Recommended fix: Add a descriptive &lt;h1&gt; tag with your primary keyword.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+              <div className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200">
+                Warning Priority
+              </div>
+              <h4 className="text-base font-bold text-slate-900">Missing Meta Description</h4>
+              <p className="text-xs font-mono text-slate-400">Affected URL: /about</p>
+              <div className="text-xs text-slate-600 pt-2 border-t border-slate-100 space-y-2">
+                <p><strong>Why it matters:</strong> Search engines generate random, unstructured text snippets in search results, resulting in lower click-through rates.</p>
+                <p className="text-amber-700 font-semibold bg-amber-50 p-2.5 rounded-lg border border-amber-100">
+                  Recommended fix: Write a unique 120–155 character meta description.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3">
+              <div className="inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700 border border-blue-200">
+                Notice Priority
+              </div>
+              <h4 className="text-base font-bold text-slate-900">Oversized Hero Image</h4>
+              <p className="text-xs font-mono text-slate-400">Affected URL: /gallery</p>
+              <div className="text-xs text-slate-600 pt-2 border-t border-slate-100 space-y-2">
+                <p><strong>Why it matters:</strong> Heavy uncompressed images delay LCP and consume excessive cellular data on mobile devices.</p>
+                <p className="text-blue-700 font-semibold bg-blue-50 p-2.5 rounded-lg border border-blue-100">
+                  Recommended fix: Compress asset to modern WebP format with dimensions.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 10. PRICING SECTION */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-14">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+            Pricing Plans
+          </h2>
+          <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Predictable Pricing for Websites & Agencies
+          </h3>
+          <p className="mt-3 text-slate-600 text-sm">
+            Start free or upgrade for higher crawl volume and white-label client reports.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+          {/* FREE */}
+          <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <h4 className="text-lg font-bold text-slate-900 mb-1">Free Starter</h4>
+              <p className="text-xs text-slate-500 mb-4">Quick checks for individual websites</p>
+              <div className="text-3xl font-black text-slate-900 mb-6">
+                $0 <span className="text-sm font-normal text-slate-400">/ forever</span>
+              </div>
+              <ul className="space-y-3 text-xs text-slate-600 mb-8">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> 10 pages per audit
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> Basic SEO & speed checks
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> Basic technical checks
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> Limited report history
+                </li>
+              </ul>
+            </div>
+            <Link
+              to="/"
+              className="w-full text-center py-3 rounded-xl border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold text-sm transition"
+            >
+              Start Free Audit
+            </Link>
+          </div>
+
+          {/* PRO */}
+          <div className="p-8 rounded-3xl bg-white border-2 border-blue-600 relative flex flex-col justify-between shadow-xl shadow-blue-600/10">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider">
+              Most Popular
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-slate-900 mb-1">Pro Consultant</h4>
+              <p className="text-xs text-slate-500 mb-4">For businesses and developers</p>
+              <div className="text-3xl font-black text-slate-900 mb-6">
+                $29 <span className="text-sm font-normal text-slate-400">/ month</span>
+              </div>
+              <ul className="space-y-3 text-xs text-slate-600 mb-8">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-blue-600" /> 100 pages per audit
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-blue-600" /> Full multi-page deep website audit
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-blue-600" /> Historical reports & compare diffs
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-blue-600" /> Scheduled weekly monitoring
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-blue-600" /> Email alerts & notifications
+                </li>
+              </ul>
+            </div>
+            <Link
+              to="/pricing"
+              className="w-full text-center py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition shadow-sm"
+            >
+              Get Started with Pro
+            </Link>
+          </div>
+
+          {/* AGENCY */}
+          <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+              <h4 className="text-lg font-bold text-slate-900 mb-1">Agency Enterprise</h4>
+              <p className="text-xs text-slate-500 mb-4">For marketing agencies & multiple clients</p>
+              <div className="text-3xl font-black text-slate-900 mb-6">
+                $99 <span className="text-sm font-normal text-slate-400">/ month</span>
+              </div>
+              <ul className="space-y-3 text-xs text-slate-600 mb-8">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> 500 pages per audit
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> Multiple websites & client workspaces
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> Custom White-Label PDF reports
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-emerald-600" /> Team access & CSV export
+                </li>
+              </ul>
+            </div>
+            <Link
+              to="/pricing"
+              className="w-full text-center py-3 rounded-xl border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold text-sm transition"
+            >
+              Explore Agency Plan
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Why Choose SiteAudit Pro */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-xs uppercase font-bold tracking-widest text-blue-400 mb-2">
-              Why SiteAudit Pro
+      {/* 11. WHO IS IT FOR? */}
+      <section className="py-20 bg-slate-50 border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+              Audience
             </h2>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Don’t Just Guess If Your Website Is Healthy. Know It.
+            <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              Built for Modern Web Professionals
             </h3>
-            <p className="mt-4 text-slate-400 text-sm sm:text-base leading-relaxed">
-              Most online checkers only test the single URL you entered. SiteAudit Pro crawls deeply through your internal pages, uncovering hidden 404s, uncompressed banners, missing canonicals, and mobile layout overflow.
+            <p className="mt-3 text-slate-600 text-sm">
+              SiteAudit Pro delivers tailored value across every stage of website maintenance.
             </p>
-
-            <div className="mt-8 space-y-4">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">Full Multi-Page Crawler</h4>
-                  <p className="text-xs text-slate-400">
-                    Discovers reachable pages through internal links and XML sitemaps up to configured tier limits.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">Zero Non-Functional Placeholders</h4>
-                  <p className="text-xs text-slate-400">
-                    Every score, issue, and recommendation is calculated from actual network and DOM inspection.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">White-Label PDF Reports for Agencies</h4>
-                  <p className="text-xs text-slate-400">
-                    Export polished vector PDF reports styled with your agency’s branding and custom colors.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div className="p-6 rounded-3xl bg-[#0B132B] border border-slate-800 shadow-2xl relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 text-xs">
-              <span className="font-mono text-slate-400">Health Breakdown Preview</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">
-                Live Engine
-              </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 text-center">
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
+                <Globe className="w-5 h-5" />
+              </div>
+              <h4 className="text-sm font-bold text-slate-900 mb-1">Website Owners</h4>
+              <p className="text-[11px] text-slate-500">Know why visitors bounce and fix critical errors.</p>
             </div>
-            <div className="py-6 space-y-4">
-              <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                  <span>SEO Score (25%)</span>
-                  <span className="text-emerald-400">88/100</span>
-                </div>
-                <div className="h-2 bg-slate-900 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full w-[88%]" />
-                </div>
+
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+                <Code2 className="w-4 h-4" />
               </div>
-              <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                  <span>Performance & Speed (25%)</span>
-                  <span className="text-amber-400">72/100</span>
-                </div>
-                <div className="h-2 bg-slate-900 rounded-full overflow-hidden">
-                  <div className="h-full bg-amber-500 rounded-full w-[72%]" />
-                </div>
+              <h4 className="text-sm font-bold text-slate-900 mb-1">Developers</h4>
+              <p className="text-[11px] text-slate-500">Debug Core Web Vitals, scripts, and layout shifts.</p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto mb-3">
+                <TrendingUp className="w-4 h-4" />
               </div>
-              <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                  <span>Mobile Readiness (20%)</span>
-                  <span className="text-emerald-400">92/100</span>
-                </div>
-                <div className="h-2 bg-slate-900 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full w-[92%]" />
-                </div>
+              <h4 className="text-sm font-bold text-slate-900 mb-1">SEO Specialists</h4>
+              <p className="text-[11px] text-slate-500">Uncover crawl traps, missing titles, and canonicals.</p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+              <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-3">
+                <Briefcase className="w-4 h-4" />
               </div>
-              <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                  <span>Security Configuration (15%)</span>
-                  <span className="text-emerald-400">85/100</span>
-                </div>
-                <div className="h-2 bg-slate-900 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full w-[85%]" />
-                </div>
+              <h4 className="text-sm font-bold text-slate-900 mb-1">Digital Agencies</h4>
+              <p className="text-[11px] text-slate-500">Deliver white-label PDF audit reports to clients.</p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm col-span-1 sm:col-span-2 lg:col-span-1">
+              <div className="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center mx-auto mb-3">
+                <Building2 className="w-4 h-4" />
               </div>
+              <h4 className="text-sm font-bold text-slate-900 mb-1">Small Businesses</h4>
+              <p className="text-[11px] text-slate-500">Keep your storefront secure, responsive, and fast.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Overview */}
-      <section className="py-20 bg-[#0B132B]/40 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-xs uppercase font-bold tracking-widest text-blue-400 mb-2">
-            Plans
-          </h2>
-          <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
-            Transparent Pricing for Growing Websites & Agencies
-          </h3>
-          <p className="text-slate-400 text-sm max-w-2xl mx-auto mb-12">
-            Start with our generous free tier or upgrade for multi-page crawling, white-label PDF reports, and automated monitoring.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            {/* Free */}
-            <div className="p-8 rounded-3xl bg-[#0B132B] border border-slate-800 flex flex-col justify-between">
-              <div>
-                <h4 className="text-lg font-bold text-white mb-1">Free Starter</h4>
-                <p className="text-xs text-slate-400 mb-4">For single-site audits</p>
-                <div className="text-3xl font-extrabold text-white mb-6">
-                  $0 <span className="text-sm font-normal text-slate-400">/ forever</span>
-                </div>
-                <ul className="space-y-3 text-xs text-slate-300 mb-8">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" /> 10 pages per scan
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" /> Full 7-module audit
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" /> Prioritized action plan
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" /> Web dashboard results
-                  </li>
-                </ul>
-              </div>
-              <Link
-                to="/"
-                className="w-full text-center py-3 rounded-xl border border-slate-700 hover:border-slate-600 text-white font-semibold text-sm transition"
-              >
-                Scan Free Now
-              </Link>
-            </div>
-
-            {/* Pro */}
-            <div className="p-8 rounded-3xl bg-[#0B132B] border-2 border-blue-500 relative flex flex-col justify-between shadow-2xl shadow-blue-500/10">
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wider">
-                Most Popular
-              </div>
-              <div>
-                <h4 className="text-lg font-bold text-white mb-1">Pro Consultant</h4>
-                <p className="text-xs text-slate-400 mb-4">For developers & businesses</p>
-                <div className="text-3xl font-extrabold text-white mb-6">
-                  $29 <span className="text-sm font-normal text-slate-400">/ month</span>
-                </div>
-                <ul className="space-y-3 text-xs text-slate-300 mb-8">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-blue-400" /> 100 pages crawled per scan
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-blue-400" /> Downloadable PDF reports
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-blue-400" /> Scheduled weekly monitoring
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-blue-400" /> Audit comparison & diffs
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-blue-400" /> Email alert notifications
-                  </li>
-                </ul>
-              </div>
-              <Link
-                to="/pricing"
-                className="w-full text-center py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition shadow-lg shadow-blue-600/30"
-              >
-                Get Started with Pro
-              </Link>
-            </div>
-
-            {/* Agency */}
-            <div className="p-8 rounded-3xl bg-[#0B132B] border border-slate-800 flex flex-col justify-between">
-              <div>
-                <h4 className="text-lg font-bold text-white mb-1">Agency Enterprise</h4>
-                <p className="text-xs text-slate-400 mb-4">For agencies managing clients</p>
-                <div className="text-3xl font-extrabold text-white mb-6">
-                  $99 <span className="text-sm font-normal text-slate-400">/ month</span>
-                </div>
-                <ul className="space-y-3 text-xs text-slate-300 mb-8">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" /> 500 pages crawled per scan
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" /> White-Label PDF reports
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" /> Unlimited saved websites
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4 text-emerald-400" /> Team workspaces & API access
-                  </li>
-                </ul>
-              </div>
-              <Link
-                to="/pricing"
-                className="w-full text-center py-3 rounded-xl border border-slate-700 hover:border-slate-600 text-white font-semibold text-sm transition"
-              >
-                View Agency Features
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
+      {/* 12. FAQ SECTION */}
       <section className="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-xs uppercase font-bold tracking-widest text-blue-400 mb-2">
-            Answers
+          <h2 className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">
+            FAQ
           </h2>
-          <h3 className="text-3xl font-extrabold text-white tracking-tight">
+          <h3 className="text-3xl font-extrabold text-slate-900 tracking-tight">
             Frequently Asked Questions
           </h3>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {faqs.map((faq, idx) => (
             <div
               key={idx}
-              className="rounded-2xl bg-[#0B132B] border border-slate-800 overflow-hidden transition"
+              className="rounded-2xl bg-white border border-slate-200 shadow-sm overflow-hidden transition"
             >
               <button
                 onClick={() => setFaqOpen(faqOpen === idx ? null : idx)}
                 className="w-full p-5 text-left flex items-center justify-between gap-4"
               >
-                <span className="text-sm sm:text-base font-bold text-white">{faq.q}</span>
+                <span className="text-sm sm:text-base font-bold text-slate-900">{faq.q}</span>
                 <ChevronDown
-                  className={`w-5 h-5 text-slate-400 transition-transform ${faqOpen === idx ? 'rotate-180 text-blue-400' : ''}`}
+                  className={`w-5 h-5 text-slate-400 transition-transform duration-200 ${faqOpen === idx ? 'rotate-180 text-blue-600' : ''}`}
                 />
               </button>
               {faqOpen === idx && (
-                <div className="px-5 pb-5 text-xs sm:text-sm text-slate-300 leading-relaxed border-t border-slate-800/80 pt-3">
+                <div className="px-5 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
                   {faq.a}
                 </div>
               )}
@@ -583,4 +882,3 @@ export const HomePage: React.FC = () => {
     </div>
   );
 };
-
