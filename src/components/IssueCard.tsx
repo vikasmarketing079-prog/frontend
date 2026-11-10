@@ -139,3 +139,4 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
     </div>
   );
 };
+

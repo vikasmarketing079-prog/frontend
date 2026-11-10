@@ -96,3 +96,4 @@ export const ScanProgressBar: React.FC<ScanProgressBarProps> = ({
     </div>
   );
 };
+

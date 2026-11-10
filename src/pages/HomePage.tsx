@@ -13,7 +13,6 @@ import {
   ArrowRight,
   CheckCircle,
   HelpCircle,
-  Sparkles,
   BarChart3,
   TrendingUp,
   AlertTriangle,
@@ -146,13 +145,7 @@ export const HomePage: React.FC = () => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[550px] bg-gradient-to-b from-blue-600/15 via-blue-900/10 to-transparent blur-3xl pointer-events-none" />
 
       {/* Hero Section */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs font-semibold mb-8 animate-in fade-in">
-          <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-          <span>Next-Gen Full Website Audit & Crawler Engine</span>
-        </div>
-
+      <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] max-w-5xl mx-auto">
           Know What’s Wrong With Your Website.{' '}
@@ -161,12 +154,12 @@ export const HomePage: React.FC = () => {
           </span>
         </h1>
 
-        <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-          Comprehensive SEO, speed performance, mobile layout, broken links, and security configuration diagnostics in one actionable audit report.
+        <p className="mt-5 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          Instant SEO, speed, mobile, and security audit in one actionable report.
         </p>
 
         {/* Audit URL Input Form */}
-        <div className="mt-10 max-w-2xl mx-auto">
+        <div className="mt-8 max-w-2xl mx-auto">
           <form onSubmit={handleStartAudit} className="relative flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
@@ -320,7 +313,7 @@ export const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
+              <FileText className="w-3.5 h-3.5" />
               <span>Interactive Demonstration</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
@@ -590,3 +583,4 @@ export const HomePage: React.FC = () => {
     </div>
   );
 };
+

@@ -75,3 +75,4 @@ export const subscriptionApi = {
   checkout: (data: { planId: string; provider?: string }) => API.post('/subscriptions/checkout', data),
   changeTier: (plan: string) => API.post('/subscriptions/tier', { plan }),
 };
+

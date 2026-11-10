@@ -49,3 +49,4 @@ export const CookiePage: React.FC = () => (
     </p>
   </div>
 );
+

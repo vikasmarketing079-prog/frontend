@@ -12,7 +12,6 @@ import {
   FileText,
   User as UserIcon,
   LogOut,
-  Sparkles,
   LayoutDashboard,
   Menu,
   X,
@@ -148,10 +147,9 @@ export const Navbar: React.FC = () => {
           </Link>
           <Link
             to="/demo"
-            className="px-3 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 rounded-lg hover:bg-blue-950/40 transition flex items-center gap-1.5"
+            className="px-3 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-lg hover:bg-slate-800/60 transition"
           >
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            <span>Sample Report</span>
+            Sample Report
           </Link>
           <Link
             to="/blog"
@@ -350,3 +348,4 @@ export const Navbar: React.FC = () => {
     </header>
   );
 };
+

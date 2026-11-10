@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
-import { ShieldCheck, Mail, Lock, User, Building, ArrowRight, Sparkles } from 'lucide-react';
+import { ShieldCheck, Mail, Lock, User, Building, ArrowRight } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -104,7 +104,7 @@ export const LoginPage: React.FC = () => {
             onClick={handleDemoSignIn}
             className="w-full py-2.5 rounded-xl bg-blue-950/30 border border-blue-800/40 hover:bg-blue-900/40 text-blue-300 font-semibold text-xs transition flex items-center justify-center gap-2"
           >
-            <Sparkles className="w-4 h-4 text-blue-400" />
+            <ShieldCheck className="w-4 h-4 text-blue-400" />
             <span>Instant One-Click Demo Sign In</span>
           </button>
           <span className="text-[10px] text-slate-500 block mt-1">Logs in with pre-configured Agency account</span>
@@ -243,3 +243,4 @@ export const RegisterPage: React.FC = () => {
     </div>
   );
 };
+

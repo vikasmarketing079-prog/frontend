@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.js';
 import { subscriptionApi } from '../services/api.js';
-import { CheckCircle, Zap, Shield, Sparkles } from 'lucide-react';
+import { CheckCircle, Zap, Shield } from 'lucide-react';
 
 export const PricingPage: React.FC = () => {
   const { user, quickDemoLogin } = useAuth();
@@ -178,3 +178,4 @@ export const PricingPage: React.FC = () => {
     </div>
   );
 };
+

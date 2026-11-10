@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.js';
 import { authApi, subscriptionApi } from '../services/api.js';
-import { User, Shield, Sparkles, Check, Building, Palette, FileText } from 'lucide-react';
+import { User, Shield, Layers, Check, Building, Palette, FileText } from 'lucide-react';
 
 export const SettingsPage: React.FC = () => {
   const { user, updateUser } = useAuth();
@@ -165,7 +165,7 @@ export const SettingsPage: React.FC = () => {
         {/* Tier Switcher for Testing & Subscription Management */}
         <div className="bg-[#0B132B] border border-slate-800 rounded-3xl p-6 sm:p-8">
           <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-amber-400" />
+            <Layers className="w-5 h-5 text-amber-400" />
             <span>Subscription Tier Management</span>
           </h3>
           <p className="text-xs text-slate-400 mb-6">
@@ -218,3 +218,4 @@ export const SettingsPage: React.FC = () => {
     </div>
   );
 };
+
