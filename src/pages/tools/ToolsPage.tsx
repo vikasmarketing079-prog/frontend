@@ -178,6 +178,7 @@ export const ToolsPage: React.FC = () => {
                 score={result.score}
                 metrics={result.metrics}
                 issues={result.issues}
+                screenshot={result.screenshot}
               />
             ) : (
               <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 animate-in fade-in">
