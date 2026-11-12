@@ -67,124 +67,150 @@ export const Navbar: React.FC = () => {
             </button>
 
             {toolsOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/3 mt-2.5 w-[560px] bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-900/10 p-3 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+              <div className="absolute top-full left-1/2 -translate-x-1/3 mt-2.5 w-[600px] bg-white border border-slate-200 rounded-2xl shadow-2xl shadow-slate-900/10 p-3.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150 font-sans">
                 {/* Featured Tool Banner: Competitor Battle */}
                 <Link
                   to="/battle"
                   onClick={() => setToolsOpen(false)}
-                  className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-orange-50/90 via-amber-50/70 to-orange-50/50 hover:from-orange-100/90 hover:to-amber-100/70 border border-orange-200/80 transition group mb-2"
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-orange-50 via-amber-50/70 to-orange-50/40 hover:from-orange-100/90 hover:to-amber-100/80 border border-orange-200/90 transition-all duration-200 group mb-3 shadow-xs hover:shadow-sm"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-orange-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm shadow-orange-500/30 group-hover:scale-105 transition">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 text-white flex items-center justify-center flex-shrink-0 shadow-md shadow-orange-500/25 group-hover:scale-105 transition-transform">
                       <Swords className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-slate-900 flex items-center gap-2">
+                      <div className="text-sm font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
                         <span>Competitor Head-to-Head Battle</span>
-                        <span className="text-[9px] uppercase px-1.5 py-0.5 font-mono font-bold bg-orange-600 text-white rounded">NEW</span>
+                        <span className="text-[10px] uppercase px-2 py-0.5 font-mono font-extrabold bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-full shadow-xs">
+                          NEW
+                        </span>
                       </div>
-                      <div className="text-[11px] text-slate-500 mt-0.5">
-                        Compare your website against any competitor live round-by-round
+                      <div className="text-xs text-slate-600 font-medium mt-0.5">
+                        Compare your website against any competitor URL live round-by-round
                       </div>
                     </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-orange-600 group-hover:translate-x-0.5 transition flex-shrink-0 ml-2" />
+                  <ArrowRight className="w-4 h-4 text-orange-600 group-hover:translate-x-1 transition-transform flex-shrink-0 ml-2" />
                 </Link>
 
                 {/* 2-Column Tools Grid */}
-                <div className="grid grid-cols-2 gap-1.5 pt-1 pb-2">
+                <div className="grid grid-cols-2 gap-2 pb-3">
                   <Link
                     to="/tools/seo"
                     onClick={() => setToolsOpen(false)}
-                    className="flex items-start gap-2.5 p-2.5 rounded-xl hover:bg-slate-50 transition group"
+                    className="flex items-start gap-3 p-3 rounded-xl border border-transparent hover:border-slate-200/80 hover:bg-slate-50/90 transition-all duration-150 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                      <Search className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                      <Search className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 transition">SEO Checker</div>
-                      <div className="text-[11px] text-slate-500 leading-tight mt-0.5">Title, meta tags, H1 & structure</div>
+                      <div className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        SEO Checker
+                      </div>
+                      <div className="text-xs text-slate-500 font-normal leading-relaxed mt-0.5">
+                        Title, meta tags, H1 hierarchy & schema
+                      </div>
                     </div>
                   </Link>
 
                   <Link
                     to="/tools/ssl"
                     onClick={() => setToolsOpen(false)}
-                    className="flex items-start gap-2.5 p-2.5 rounded-xl hover:bg-slate-50 transition group"
+                    className="flex items-start gap-3 p-3 rounded-xl border border-transparent hover:border-slate-200/80 hover:bg-slate-50/90 transition-all duration-150 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                      <Lock className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                      <Lock className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 transition">SSL Certificate Checker</div>
-                      <div className="text-[11px] text-slate-500 leading-tight mt-0.5">Validity & expiry countdown</div>
+                      <div className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        SSL Certificate Checker
+                      </div>
+                      <div className="text-xs text-slate-500 font-normal leading-relaxed mt-0.5">
+                        TLS validity, cipher & expiry countdown
+                      </div>
                     </div>
                   </Link>
 
                   <Link
                     to="/tools/speed"
                     onClick={() => setToolsOpen(false)}
-                    className="flex items-start gap-2.5 p-2.5 rounded-xl hover:bg-slate-50 transition group"
+                    className="flex items-start gap-3 p-3 rounded-xl border border-transparent hover:border-slate-200/80 hover:bg-slate-50/90 transition-all duration-150 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                      <Gauge className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                      <Gauge className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 transition">Speed Checker</div>
-                      <div className="text-[11px] text-slate-500 leading-tight mt-0.5">TTFB, FCP & Core Web Vitals</div>
+                      <div className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        Speed & Core Web Vitals
+                      </div>
+                      <div className="text-xs text-slate-500 font-normal leading-relaxed mt-0.5">
+                        TTFB, FCP, LCP & payload weight
+                      </div>
                     </div>
                   </Link>
 
                   <Link
                     to="/tools/mobile"
                     onClick={() => setToolsOpen(false)}
-                    className="flex items-start gap-2.5 p-2.5 rounded-xl hover:bg-slate-50 transition group"
+                    className="flex items-start gap-3 p-3 rounded-xl border border-transparent hover:border-slate-200/80 hover:bg-slate-50/90 transition-all duration-150 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                      <Smartphone className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-purple-50 border border-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                      <Smartphone className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 transition">Mobile-Friendly Checker</div>
-                      <div className="text-[11px] text-slate-500 leading-tight mt-0.5">Viewport & layout overflow</div>
+                      <div className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        Mobile-Friendly Checker
+                      </div>
+                      <div className="text-xs text-slate-500 font-normal leading-relaxed mt-0.5">
+                        375px/768px viewport & layout overflow
+                      </div>
                     </div>
                   </Link>
 
                   <Link
                     to="/tools/broken-links"
                     onClick={() => setToolsOpen(false)}
-                    className="flex items-start gap-2.5 p-2.5 rounded-xl hover:bg-slate-50 transition group"
+                    className="flex items-start gap-3 p-3 rounded-xl border border-transparent hover:border-slate-200/80 hover:bg-slate-50/90 transition-all duration-150 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                      <Link2 className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                      <Link2 className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 transition">Broken Link Checker</div>
-                      <div className="text-[11px] text-slate-500 leading-tight mt-0.5">Discover 404 dead ends</div>
+                      <div className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        Broken Link Checker
+                      </div>
+                      <div className="text-xs text-slate-500 font-normal leading-relaxed mt-0.5">
+                        Discover 404 dead ends & broken links
+                      </div>
                     </div>
                   </Link>
 
                   <Link
                     to="/tools/security-headers"
                     onClick={() => setToolsOpen(false)}
-                    className="flex items-start gap-2.5 p-2.5 rounded-xl hover:bg-slate-50 transition group"
+                    className="flex items-start gap-3 p-3 rounded-xl border border-transparent hover:border-slate-200/80 hover:bg-slate-50/90 transition-all duration-150 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                      <ShieldCheck className="w-4 h-4" />
+                    <div className="w-10 h-10 rounded-xl bg-sky-50 border border-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                      <ShieldCheck className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-semibold text-slate-900 group-hover:text-blue-600 transition">Security Header Checker</div>
-                      <div className="text-[11px] text-slate-500 leading-tight mt-0.5">HSTS, CSP & X-Frame protection</div>
+                      <div className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        Security Header Checker
+                      </div>
+                      <div className="text-xs text-slate-500 font-normal leading-relaxed mt-0.5">
+                        HSTS, CSP & X-Frame defense audit
+                      </div>
                     </div>
                   </Link>
                 </div>
 
                 {/* Dropdown Bottom Banner */}
-                <div className="pt-2.5 pb-1 px-3 border-t border-slate-100 flex items-center justify-between text-xs bg-slate-50/70 -mx-3 -mb-3 rounded-b-2xl">
-                  <span className="text-slate-500 font-medium">Need multi-page crawling?</span>
+                <div className="pt-3 pb-1 px-4 border-t border-slate-100 flex items-center justify-between text-xs bg-slate-50/90 -mx-3.5 -mb-3.5 rounded-b-2xl">
+                  <span className="text-slate-600 font-medium">Need multi-page site crawling?</span>
                   <Link
                     to="/"
                     onClick={() => setToolsOpen(false)}
-                    className="font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition"
+                    className="font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 transition"
                   >
                     <span>Run Full Website Audit</span>
                     <ArrowRight className="w-3.5 h-3.5" />
