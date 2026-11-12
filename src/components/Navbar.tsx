@@ -27,28 +27,28 @@ export const Navbar: React.FC = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[76px] flex items-center justify-between">
         {/* LEFT: Brand Logo */}
         <Link to="/" className="flex items-center space-x-3 group">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shadow-blue-500/20 group-hover:bg-blue-700 transition">
+          <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:bg-blue-700 transition">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-xl font-bold tracking-tight text-slate-900 flex items-center">
+            <div className="text-xl font-extrabold tracking-tight text-slate-900 flex items-center">
               SiteAudit<span className="text-blue-600">Pro</span>
             </div>
-            <div className="text-[10px] font-semibold tracking-wider text-slate-400 uppercase -mt-0.5">
+            <div className="text-[10px] font-bold tracking-widest text-slate-400 uppercase -mt-0.5">
               Website Health Engine
             </div>
           </div>
         </Link>
 
         {/* CENTER: Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+        <nav className="hidden md:flex items-center space-x-1 lg:space-x-1.5">
           <Link
             to="/"
-            className="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition"
+            className="px-3.5 py-2 text-[15px] font-semibold text-slate-700 hover:text-slate-950 rounded-xl hover:bg-slate-100/70 transition-all duration-150"
           >
             Overview
           </Link>
@@ -58,8 +58,8 @@ export const Navbar: React.FC = () => {
             <button
               onClick={() => setToolsOpen(!toolsOpen)}
               onBlur={() => setTimeout(() => setToolsOpen(false), 250)}
-              className={`px-3.5 py-2 text-sm font-medium rounded-lg flex items-center gap-1.5 transition ${
-                toolsOpen ? 'text-blue-600 bg-blue-50/50' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              className={`px-3.5 py-2 text-[15px] font-semibold rounded-xl flex items-center gap-1.5 transition-all duration-150 ${
+                toolsOpen ? 'text-blue-600 bg-blue-50/70 font-bold' : 'text-slate-700 hover:text-slate-950 hover:bg-slate-100/70'
               }`}
             >
               <span>Free Tools</span>
@@ -222,30 +222,32 @@ export const Navbar: React.FC = () => {
 
           <Link
             to="/battle"
-            className="px-3.5 py-2 text-sm font-semibold text-orange-600 hover:text-orange-700 rounded-lg hover:bg-orange-50/70 transition flex items-center gap-1.5"
+            className="px-3.5 py-2 text-[15px] font-bold text-orange-600 hover:text-orange-700 rounded-xl hover:bg-orange-50/80 transition-all duration-150 flex items-center gap-1.5"
           >
             <Swords className="w-4 h-4 text-orange-500" />
             <span>Battle</span>
-            <span className="text-[9px] uppercase px-1.5 py-0.2 font-mono font-bold bg-orange-600 text-white rounded">NEW</span>
+            <span className="text-[10px] uppercase px-1.5 py-0.5 font-mono font-extrabold bg-orange-600 text-white rounded-md shadow-xs">
+              NEW
+            </span>
           </Link>
 
           <Link
             to="/pricing"
-            className="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition"
+            className="px-3.5 py-2 text-[15px] font-semibold text-slate-700 hover:text-slate-950 rounded-xl hover:bg-slate-100/70 transition-all duration-150"
           >
             Pricing
           </Link>
 
           <Link
             to="/demo"
-            className="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition"
+            className="px-3.5 py-2 text-[15px] font-semibold text-slate-700 hover:text-slate-950 rounded-xl hover:bg-slate-100/70 transition-all duration-150"
           >
             Sample Report
           </Link>
 
           <Link
             to="/blog"
-            className="px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-50 transition"
+            className="px-3.5 py-2 text-[15px] font-semibold text-slate-700 hover:text-slate-950 rounded-xl hover:bg-slate-100/70 transition-all duration-150"
           >
             Resources
           </Link>
@@ -317,13 +319,13 @@ export const Navbar: React.FC = () => {
             <>
               <Link
                 to="/login"
-                className="text-sm font-medium text-slate-600 hover:text-slate-900 px-3 py-2 transition"
+                className="text-[15px] font-semibold text-slate-700 hover:text-slate-950 px-4 py-2 rounded-xl hover:bg-slate-100/70 transition-all duration-150"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="inline-flex items-center justify-center text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2.5 rounded-xl shadow-sm hover:shadow transition"
+                className="inline-flex items-center justify-center text-[15px] font-bold text-white bg-blue-600 hover:bg-blue-700 active:scale-95 px-5 py-2.5 rounded-xl shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-150"
               >
                 Start Free Audit
               </Link>
@@ -410,15 +412,6 @@ export const Navbar: React.FC = () => {
               </Link>
             </div>
           </div>
-          <Link
-            to="/battle"
-            className="px-3.5 py-2 text-sm font-semibold text-orange-600 hover:text-orange-700 rounded-lg hover:bg-orange-50/70 transition flex items-center gap-1.5"
-          >
-            <Swords className="w-4 h-4 text-orange-500" />
-            <span>Battle</span>
-            <span className="text-[9px] uppercase px-1.5 py-0.2 font-mono font-bold bg-orange-600 text-white rounded">NEW</span>
-          </Link>
-
           <Link
             to="/pricing"
             onClick={() => setMobileMenuOpen(false)}
