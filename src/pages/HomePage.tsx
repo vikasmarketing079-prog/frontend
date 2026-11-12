@@ -27,6 +27,8 @@ import {
   Code2,
   Building2,
   TrendingUp,
+  Loader2,
+  RefreshCw,
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -48,16 +50,30 @@ export const HomePage: React.FC = () => {
     setLoading(true);
     setError('');
 
-    try {
-      let formattedUrl = url.trim();
-      if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
-        formattedUrl = 'https://' + formattedUrl;
-      }
+    let formattedUrl = url.trim();
+    if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
+      formattedUrl = 'https://' + formattedUrl;
+    }
 
+    // Immediately activate the live scanner state in the right-side dashboard card
+    setActiveScan({
+      targetUrl: formattedUrl,
+      progressPercent: 20,
+      status: 'crawling',
+      currentStepMessage: 'Connecting to server and initiating multi-page crawl...',
+      pagesDiscovered: 1,
+      pagesScanned: 0,
+    });
+
+    try {
       const res = await auditApi.start({ url: formattedUrl, maxPages: 10 });
       if (res.data.success && res.data.data) {
         const auditId = res.data.data.auditId;
-        setActiveScan(res.data.data);
+        setActiveScan((prev: any) => ({
+          ...prev,
+          ...res.data.data,
+          progressPercent: Math.max(prev?.progressPercent || 20, 25),
+        }));
 
         // Poll progress until complete or redirect
         const interval = setInterval(async () => {
@@ -65,10 +81,17 @@ export const HomePage: React.FC = () => {
             const progRes = await auditApi.getProgress(auditId);
             if (progRes.data.success && progRes.data.data) {
               const audit = progRes.data.data;
-              setActiveScan(audit);
+              setActiveScan((prev: any) => ({ ...prev, ...audit }));
               if (audit.status === 'completed') {
                 clearInterval(interval);
-                navigate(`/report/${auditId}`);
+                setActiveScan((prev: any) => ({
+                  ...prev,
+                  progressPercent: 100,
+                  currentStepMessage: 'Audit complete! Opening your report...',
+                }));
+                setTimeout(() => {
+                  navigate(`/report/${auditId}`);
+                }, 600);
               } else if (audit.status === 'failed') {
                 clearInterval(interval);
                 setError(audit.errorMessage || 'Audit failed');
@@ -79,7 +102,7 @@ export const HomePage: React.FC = () => {
             clearInterval(interval);
             navigate(`/report/${auditId}`);
           }
-        }, 1500);
+        }, 1200);
       }
     } catch (err: any) {
       setError(err.response?.data?.error || err.message || 'Failed to start audit.');
@@ -237,142 +260,255 @@ export const HomePage: React.FC = () => {
                   Built for website owners, developers, and digital agencies.
                 </div>
               </div>
-
-              {/* Real-time scan progress if active */}
-              {loading && activeScan && (
-                <div className="pt-4 max-w-xl">
-                  <ScanProgressBar
-                    progressPercent={activeScan.progressPercent || 25}
-                    status={activeScan.status || 'crawling'}
-                    stepMessage={activeScan.currentStepMessage}
-                    pagesDiscovered={activeScan.pagesDiscovered}
-                    pagesScanned={activeScan.pagesScanned}
-                  />
-                </div>
-              )}
             </div>
 
-            {/* RIGHT SIDE - CUSTOM-DESIGNED DASHBOARD PREVIEW */}
+            {/* RIGHT SIDE - DYNAMIC AUDIT DASHBOARD & LIVE LOADING SCANNER */}
             <div className="lg:col-span-5">
               <div className="relative">
                 {/* Subtle soft backdrop accent */}
                 <div className="absolute -inset-1 bg-gradient-to-tr from-blue-100 to-indigo-50 rounded-3xl blur-xl opacity-70"></div>
 
-                <div className="relative bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xl shadow-slate-200/50 space-y-5">
+                <div className="relative bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xl shadow-slate-200/50 space-y-5 transition-all">
                   {/* Dashboard Header Bar */}
                   <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-                      <span className="text-xs font-semibold text-slate-800">https://mybrandstore.com</span>
+                    <div className="flex items-center gap-2 truncate max-w-[240px]">
+                      <div className={`w-2.5 h-2.5 rounded-full ${loading ? 'bg-blue-600 animate-ping' : 'bg-emerald-500'}`}></div>
+                      <span className="text-xs font-semibold text-slate-800 font-mono truncate">
+                        {loading ? (activeScan?.targetUrl || url || 'https://analyzing-domain...') : (url.trim() || 'https://mybrandstore.com')}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
-                      Sample Audit Preview
-                    </span>
+                    {loading ? (
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+                        <Loader2 className="w-3 h-3 animate-spin text-blue-600" />
+                        <span>Live Audit Active</span>
+                      </span>
+                    ) : (
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">
+                        Sample Audit Preview
+                      </span>
+                    )}
                   </div>
 
-                  {/* Top Stats: Score + Issues */}
-                  <div className="grid grid-cols-2 gap-4 items-center">
-                    {/* Score Circle Card */}
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-3.5">
-                      <div className="relative flex items-center justify-center w-14 h-14">
-                        <svg className="w-14 h-14 transform -rotate-90">
-                          <circle cx="28" cy="28" r="23" stroke="#E2E8F0" strokeWidth="5" fill="transparent" />
-                          <circle
-                            cx="28"
-                            cy="28"
-                            r="23"
-                            stroke="#16A34A"
-                            strokeWidth="5"
-                            strokeDasharray="144.5"
-                            strokeDashoffset="18"
-                            strokeLinecap="round"
-                            fill="transparent"
-                          />
-                        </svg>
-                        <span className="absolute text-sm font-black text-slate-900">87</span>
-                      </div>
-                      <div>
-                        <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Health Score</div>
-                        <div className="text-xs font-bold text-emerald-700">Optimal (87/100)</div>
-                      </div>
-                    </div>
+                  {loading ? (
+                    /* LIVE ACTIVE SCANNER STATE */
+                    <div className="space-y-4 animate-in fade-in duration-300">
+                      {/* Top Circular Progress + Active Status */}
+                      <div className="p-4 rounded-xl bg-blue-50/50 border border-blue-100 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3.5">
+                          <div className="relative flex items-center justify-center w-14 h-14">
+                            <svg className="w-14 h-14 transform -rotate-90">
+                              <circle cx="28" cy="28" r="23" stroke="#DBEAFE" strokeWidth="5" fill="transparent" />
+                              <circle
+                                cx="28"
+                                cy="28"
+                                r="23"
+                                stroke="#2563EB"
+                                strokeWidth="5"
+                                strokeDasharray="144.5"
+                                strokeDashoffset={144.5 - (144.5 * (activeScan?.progressPercent || 25)) / 100}
+                                strokeLinecap="round"
+                                fill="transparent"
+                                className="transition-all duration-500 ease-out"
+                              />
+                            </svg>
+                            <span className="absolute text-xs font-black text-blue-700 font-mono">
+                              {activeScan?.progressPercent || 25}%
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 font-mono block">
+                              Crawling & Diagnostics
+                            </span>
+                            <span className="text-xs font-bold text-slate-900 block mt-0.5">
+                              {activeScan?.pagesScanned || 0} of {activeScan?.pagesDiscovered || 10} Pages Scanned
+                            </span>
+                          </div>
+                        </div>
 
-                    {/* Issues pill grid */}
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-100 font-medium">
-                        <span>3 Critical Issues</span>
-                        <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
+                        <div className="text-right">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800">
+                            <Activity className="w-3 h-3 animate-pulse" />
+                            <span>BFS Engine</span>
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-100 font-medium">
-                        <span>5 Warnings</span>
-                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                      </div>
-                      <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100 font-medium">
-                        <span>4 Recommendations</span>
-                        <Info className="w-3.5 h-3.5 text-blue-600" />
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Category Progress Bars */}
-                  <div className="space-y-3 pt-2">
-                    <div>
-                      <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                        <span className="flex items-center gap-1.5">
-                          <Search className="w-3.5 h-3.5 text-slate-400" /> SEO Score
+                      {/* Current Step Banner */}
+                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs flex items-center gap-2.5">
+                        <Loader2 className="w-4 h-4 text-blue-600 animate-spin flex-shrink-0" />
+                        <span className="text-slate-700 font-medium truncate">
+                          {activeScan?.currentStepMessage || 'Discovering accessible pages and testing SSL...'}
                         </span>
-                        <span className="font-bold text-slate-900">92/100</span>
                       </div>
-                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-emerald-600 h-full rounded-full w-[92%]"></div>
-                      </div>
-                    </div>
 
-                    <div>
-                      <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                        <span className="flex items-center gap-1.5">
-                          <Zap className="w-3.5 h-3.5 text-slate-400" /> Performance
+                      {/* Live Diagnostic Pipeline Checklist */}
+                      <div className="space-y-1.5 text-xs font-medium">
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
+                          <span className="flex items-center gap-2 text-slate-700">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>DNS, TLS & Security Handshake</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-emerald-700 font-bold">Checked</span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100">
+                          <span className="flex items-center gap-2 text-slate-700">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Robots.txt & XML Sitemap Discovered</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-emerald-700 font-bold">
+                            {activeScan?.pagesDiscovered ? `${activeScan.pagesDiscovered} URLs` : 'Verified'}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-blue-50/70 border border-blue-200 text-blue-900">
+                          <span className="flex items-center gap-2 font-semibold">
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600" />
+                            <span>Playwright Multi-Viewport Rendering</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-blue-700 font-bold">Active</span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-slate-50 border border-slate-100 text-slate-500">
+                          <span className="flex items-center gap-2">
+                            <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-300"></div>
+                            <span>Core Web Vitals & Action Plan Ranking</span>
+                          </span>
+                          <span className="text-[10px] font-mono text-slate-400">Queued</span>
+                        </div>
+                      </div>
+
+                      {/* Live Overall Progress Bar */}
+                      <div className="space-y-1 pt-1">
+                        <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                          <span>Overall Progress</span>
+                          <span className="font-bold text-blue-600">{activeScan?.progressPercent || 25}%</span>
+                        </div>
+                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                          <div
+                            className="bg-blue-600 h-full rounded-full transition-all duration-500"
+                            style={{ width: `${activeScan?.progressPercent || 25}%` }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      {/* Footer */}
+                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                        <span>Generating full actionable audit report...</span>
+                        <span className="text-blue-600 font-semibold flex items-center gap-1 animate-pulse">
+                          <span>Auto-redirecting</span>
+                          <ArrowRight className="w-3 h-3" />
                         </span>
-                        <span className="font-bold text-slate-900">78/100</span>
-                      </div>
-                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-amber-500 h-full rounded-full w-[78%]"></div>
                       </div>
                     </div>
+                  ) : (
+                    /* IDLE SAMPLE AUDIT PREVIEW STATE */
+                    <>
+                      {/* Top Stats: Score + Issues */}
+                      <div className="grid grid-cols-2 gap-4 items-center">
+                        {/* Score Circle Card */}
+                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-3.5">
+                          <div className="relative flex items-center justify-center w-14 h-14">
+                            <svg className="w-14 h-14 transform -rotate-90">
+                              <circle cx="28" cy="28" r="23" stroke="#E2E8F0" strokeWidth="5" fill="transparent" />
+                              <circle
+                                cx="28"
+                                cy="28"
+                                r="23"
+                                stroke="#16A34A"
+                                strokeWidth="5"
+                                strokeDasharray="144.5"
+                                strokeDashoffset="18"
+                                strokeLinecap="round"
+                                fill="transparent"
+                              />
+                            </svg>
+                            <span className="absolute text-sm font-black text-slate-900">87</span>
+                          </div>
+                          <div>
+                            <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Health Score</div>
+                            <div className="text-xs font-bold text-emerald-700">Optimal (87/100)</div>
+                          </div>
+                        </div>
 
-                    <div>
-                      <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                        <span className="flex items-center gap-1.5">
-                          <Smartphone className="w-3.5 h-3.5 text-slate-400" /> Mobile Usability
-                        </span>
-                        <span className="font-bold text-slate-900">95/100</span>
+                        {/* Issues pill grid */}
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-100 font-medium">
+                            <span>3 Critical Issues</span>
+                            <AlertCircle className="w-3.5 h-3.5 text-rose-600" />
+                          </div>
+                          <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-100 font-medium">
+                            <span>5 Warnings</span>
+                            <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                          </div>
+                          <div className="flex items-center justify-between text-xs px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100 font-medium">
+                            <span>4 Recommendations</span>
+                            <Info className="w-3.5 h-3.5 text-blue-600" />
+                          </div>
+                        </div>
                       </div>
-                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-emerald-600 h-full rounded-full w-[95%]"></div>
-                      </div>
-                    </div>
 
-                    <div>
-                      <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
-                        <span className="flex items-center gap-1.5">
-                          <ShieldCheck className="w-3.5 h-3.5 text-slate-400" /> Security
-                        </span>
-                        <span className="font-bold text-slate-900">84/100</span>
-                      </div>
-                      <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                        <div className="bg-emerald-600 h-full rounded-full w-[84%]"></div>
-                      </div>
-                    </div>
-                  </div>
+                      {/* Category Progress Bars */}
+                      <div className="space-y-3 pt-2">
+                        <div>
+                          <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                            <span className="flex items-center gap-1.5">
+                              <Search className="w-3.5 h-3.5 text-slate-400" /> SEO Score
+                            </span>
+                            <span className="font-bold text-slate-900">92/100</span>
+                          </div>
+                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-emerald-600 h-full rounded-full w-[92%]"></div>
+                          </div>
+                        </div>
 
-                  {/* Recent Audit Info Footer */}
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-                    <span>10 Pages Scanned • 12 Issues Found</span>
-                    <Link to="/demo" className="text-blue-600 hover:underline font-semibold flex items-center gap-1">
-                      <span>View Live Report</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
+                        <div>
+                          <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                            <span className="flex items-center gap-1.5">
+                              <Zap className="w-3.5 h-3.5 text-slate-400" /> Performance
+                            </span>
+                            <span className="font-bold text-slate-900">78/100</span>
+                          </div>
+                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-amber-500 h-full rounded-full w-[78%]"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                            <span className="flex items-center gap-1.5">
+                              <Smartphone className="w-3.5 h-3.5 text-slate-400" /> Mobile Usability
+                            </span>
+                            <span className="font-bold text-slate-900">95/100</span>
+                          </div>
+                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-emerald-600 h-full rounded-full w-[95%]"></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between text-xs font-medium text-slate-700 mb-1">
+                            <span className="flex items-center gap-1.5">
+                              <ShieldCheck className="w-3.5 h-3.5 text-slate-400" /> Security
+                            </span>
+                            <span className="font-bold text-slate-900">84/100</span>
+                          </div>
+                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-emerald-600 h-full rounded-full w-[84%]"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Recent Audit Info Footer */}
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                        <span>10 Pages Scanned • 12 Issues Found</span>
+                        <Link to="/demo" className="text-blue-600 hover:underline font-semibold flex items-center gap-1">
+                          <span>View Live Report</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
