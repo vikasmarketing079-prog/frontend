@@ -79,6 +79,7 @@ export interface PageAuditItem {
   metaDescription?: string;
   canonicalUrl?: string;
   h1Count: number;
+  h1Text?: string;
   wordCount: number;
   internalLinksCount: number;
   externalLinksCount: number;

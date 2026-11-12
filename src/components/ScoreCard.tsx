@@ -9,6 +9,7 @@ interface ScoreCardProps {
   description: string;
   onClick?: () => void;
   active?: boolean;
+  isLoading?: boolean;
 }
 
 export const ScoreCard: React.FC<ScoreCardProps> = ({
@@ -19,12 +20,16 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
   description,
   onClick,
   active = false,
+  isLoading = false,
 }) => {
   const boundedScore = Math.max(0, Math.min(100, Math.round(score)));
 
   let colorClass = 'text-rose-600 bg-rose-50 border-rose-200';
   let barColor = 'bg-rose-500';
-  if (boundedScore >= 80) {
+  if (isLoading) {
+    colorClass = 'text-blue-600 bg-blue-50 border-blue-200';
+    barColor = 'bg-blue-500 animate-pulse';
+  } else if (boundedScore >= 80) {
     colorClass = 'text-emerald-600 bg-emerald-50 border-emerald-200';
     barColor = 'bg-emerald-500';
   } else if (boundedScore >= 60) {
@@ -52,8 +57,14 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
           </div>
         </div>
         <div className="text-right">
-          <span className="text-2xl font-black text-slate-900">{boundedScore}</span>
-          <span className="text-xs text-slate-400 font-semibold">/100</span>
+          {isLoading ? (
+            <span className="text-xs font-mono font-bold text-blue-600 animate-pulse">Scanning...</span>
+          ) : (
+            <>
+              <span className="text-2xl font-black text-slate-900">{boundedScore}</span>
+              <span className="text-xs text-slate-400 font-semibold">/100</span>
+            </>
+          )}
         </div>
       </div>
 
@@ -63,7 +74,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
       <div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
         <div
           className={`h-full rounded-full transition-all duration-700 ${barColor}`}
-          style={{ width: `${boundedScore}%` }}
+          style={{ width: isLoading ? '60%' : `${boundedScore}%` }}
         />
       </div>
     </div>

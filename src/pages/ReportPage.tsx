@@ -6,6 +6,7 @@ import { HealthGauge } from '../components/HealthGauge.js';
 import { ScoreCard } from '../components/ScoreCard.js';
 import { IssueCard } from '../components/IssueCard.js';
 import { ScanProgressBar } from '../components/ScanProgressBar.js';
+import { PageMetadataInspector } from '../components/PageMetadataInspector.js';
 import {
   Download,
   Mail,
@@ -379,6 +380,7 @@ export const ReportPage: React.FC = () => {
             description="Meta tags, headings, canonicals, alt attributes & schema"
             active={activeTab === 'seo'}
             onClick={() => setActiveTab('seo')}
+            isLoading={audit.status !== 'completed' && audit.status !== 'failed'}
           />
           <ScoreCard
             title="Performance & Speed"
@@ -388,6 +390,7 @@ export const ReportPage: React.FC = () => {
             description="TTFB, FCP, LCP, CLS, payload weight, compression & caching"
             active={activeTab === 'performance'}
             onClick={() => setActiveTab('performance')}
+            isLoading={audit.status !== 'completed' && audit.status !== 'failed'}
           />
           <ScoreCard
             title="Mobile Readiness"
@@ -397,6 +400,7 @@ export const ReportPage: React.FC = () => {
             description="375px & 768px viewports, horizontal overflow & touch targets"
             active={activeTab === 'mobile'}
             onClick={() => setActiveTab('mobile')}
+            isLoading={audit.status !== 'completed' && audit.status !== 'failed'}
           />
           <ScoreCard
             title="Security Setup"
@@ -406,6 +410,7 @@ export const ReportPage: React.FC = () => {
             description="TLS certificate validity, HSTS, CSP, X-Frame & mixed content"
             active={activeTab === 'security'}
             onClick={() => setActiveTab('security')}
+            isLoading={audit.status !== 'completed' && audit.status !== 'failed'}
           />
           <ScoreCard
             title="Technical Health"
@@ -415,6 +420,7 @@ export const ReportPage: React.FC = () => {
             description="Robots.txt, XML sitemaps, clean URLs, favicon & HTTP codes"
             active={activeTab === 'technical'}
             onClick={() => setActiveTab('technical')}
+            isLoading={audit.status !== 'completed' && audit.status !== 'failed'}
           />
           <ScoreCard
             title="Content Structure"
@@ -424,6 +430,7 @@ export const ReportPage: React.FC = () => {
             description="Thin text indicator, HTML language attributes & link equity"
             active={activeTab === 'content'}
             onClick={() => setActiveTab('content')}
+            isLoading={audit.status !== 'completed' && audit.status !== 'failed'}
           />
         </div>
 
@@ -527,77 +534,166 @@ export const ReportPage: React.FC = () => {
                 </div>
               )}
             </div>
+
+            {/* On-Page SEO & Metadata Inspector (Titles, Descriptions, Character Counts) */}
+            {pages.length > 0 && (
+              <PageMetadataInspector pages={pages} targetUrl={audit.targetUrl} />
+            )}
           </div>
         )}
 
         {/* Tab: Audited Pages Explorer */}
         {activeTab === 'pages' && (
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <div>
-                <h3 className="text-xl font-bold text-slate-900">Crawled Pages Explorer</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Individual page response times, weights, and status codes discovered during crawl.
-                </p>
-              </div>
-            </div>
+          <div className="space-y-8">
+            {pages.length > 0 && (
+              <PageMetadataInspector pages={pages} targetUrl={audit.targetUrl} />
+            )}
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-mono uppercase text-[11px] border-b border-slate-200">
-                  <tr>
-                    <th className="p-3.5 rounded-l-xl">Path / URL</th>
-                    <th className="p-3.5">Status</th>
-                    <th className="p-3.5">Response Time</th>
-                    <th className="p-3.5">Page Size</th>
-                    <th className="p-3.5">H1s</th>
-                    <th className="p-3.5">Images (No Alt)</th>
-                    <th className="p-3.5 rounded-r-xl">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {pages.map((p) => (
-                    <tr key={p._id} className="hover:bg-slate-50/80 transition">
-                      <td className="p-3.5 font-mono text-slate-700 max-w-xs truncate">
-                        <a href={p.url} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">
-                          {p.path}
-                        </a>
-                      </td>
-                      <td className="p-3.5">
-                        <span
-                          className={`px-2 py-0.5 rounded font-mono font-bold text-[11px] ${
-                            p.statusCode === 200
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-rose-50 text-rose-700 border border-rose-200'
-                          }`}
-                        >
-                          {p.statusCode}
-                        </span>
-                      </td>
-                      <td className="p-3.5 font-mono text-slate-700">{p.responseTimeMs}ms</td>
-                      <td className="p-3.5 font-mono text-slate-700">{(p.pageSizeBytes / 1024).toFixed(1)} KB</td>
-                      <td className="p-3.5 font-mono text-slate-700">{p.h1Count}</td>
-                      <td className="p-3.5 font-mono">
-                        {p.missingAltCount > 0 ? (
-                          <span className="text-rose-600 font-bold">{p.missingAltCount} missing</span>
-                        ) : (
-                          <span className="text-emerald-600">All OK</span>
-                        )}
-                      </td>
-                      <td className="p-3.5">
-                        <a
-                          href={p.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-slate-400 hover:text-slate-700 p-1 inline-block"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </a>
-                      </td>
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <div>
+                  <h3 className="text-xl font-bold text-slate-900">Crawled Pages & Metadata Table</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Individual page titles, meta descriptions, character lengths, headings, and HTTP response stats.
+                  </p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-700 font-semibold uppercase text-[11px] border-b border-slate-200">
+                    <tr>
+                      <th className="p-3.5 rounded-l-xl">Path / URL</th>
+                      <th className="p-3.5">Page Title & Length</th>
+                      <th className="p-3.5">Meta Description & Length</th>
+                      <th className="p-3.5">H1 Heading</th>
+                      <th className="p-3.5">Status</th>
+                      <th className="p-3.5">Word Count</th>
+                      <th className="p-3.5 rounded-r-xl">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {pages.map((p) => {
+                      const tLen = p.title?.trim().length || 0;
+                      const dLen = p.metaDescription?.trim().length || 0;
+                      const hLen = p.h1Text?.trim().length || 0;
+
+                      return (
+                        <tr key={p._id} className="hover:bg-slate-50/80 transition align-top">
+                          <td className="p-3.5 font-mono text-slate-800 max-w-[200px]">
+                            <a
+                              href={p.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-blue-600 font-semibold hover:underline block truncate"
+                            >
+                              {p.path}
+                            </a>
+                            <span className="text-[10px] text-slate-400 block mt-0.5">
+                              {p.responseTimeMs}ms • {(p.pageSizeBytes / 1024).toFixed(1)} KB
+                            </span>
+                          </td>
+
+                          {/* Page Title + Character Count */}
+                          <td className="p-3.5 max-w-[240px]">
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <span
+                                className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${
+                                  tLen === 0
+                                    ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                    : tLen >= 50 && tLen <= 60
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                    : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                }`}
+                              >
+                                {tLen === 0 ? 'Missing Title' : `${tLen} chars`}
+                              </span>
+                            </div>
+                            <p className="text-slate-800 font-medium text-xs line-clamp-2" title={p.title}>
+                              {p.title || <span className="text-rose-500 italic">No &lt;title&gt;</span>}
+                            </p>
+                          </td>
+
+                          {/* Meta Description + Character Count */}
+                          <td className="p-3.5 max-w-[280px]">
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <span
+                                className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${
+                                  dLen === 0
+                                    ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                    : dLen >= 140 && dLen <= 160
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                    : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                }`}
+                              >
+                                {dLen === 0 ? 'Missing Description' : `${dLen} chars`}
+                              </span>
+                            </div>
+                            <p className="text-slate-600 text-xs line-clamp-2" title={p.metaDescription}>
+                              {p.metaDescription || <span className="text-rose-500 italic">No description tag</span>}
+                            </p>
+                          </td>
+
+                          {/* H1 Heading */}
+                          <td className="p-3.5 max-w-[180px]">
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <span
+                                className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${
+                                  p.h1Count === 1
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                    : p.h1Count === 0
+                                    ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                    : 'bg-amber-50 text-amber-700 border border-amber-200'
+                                }`}
+                              >
+                                {p.h1Count === 1 ? '1 H1' : p.h1Count === 0 ? '0 H1' : `${p.h1Count} H1s`}
+                                {hLen > 0 ? ` (${hLen}c)` : ''}
+                              </span>
+                            </div>
+                            <p className="text-slate-700 text-xs line-clamp-2 font-medium" title={p.h1Text || ''}>
+                              {p.h1Text || (p.h1Count > 0 ? `${p.h1Count} heading(s)` : <span className="text-slate-400 italic">None</span>)}
+                            </p>
+                          </td>
+
+                          {/* Status */}
+                          <td className="p-3.5">
+                            <span
+                              className={`px-2 py-0.5 rounded font-mono font-bold text-[11px] ${
+                                p.statusCode === 200
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : 'bg-rose-50 text-rose-700 border border-rose-200'
+                              }`}
+                            >
+                              {p.statusCode}
+                            </span>
+                          </td>
+
+                          {/* Word Count & Alt */}
+                          <td className="p-3.5 font-mono text-slate-700">
+                            <div>{p.wordCount || 0} w</div>
+                            <span className="text-[10px] text-slate-400">
+                              {p.missingAltCount > 0 ? `${p.missingAltCount} no-alt` : 'Alt OK'}
+                            </span>
+                          </td>
+
+                          {/* Action */}
+                          <td className="p-3.5">
+                            <a
+                              href={p.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-slate-400 hover:text-blue-600 p-1 inline-block"
+                              title="Open live URL"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </a>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
@@ -605,6 +701,11 @@ export const ReportPage: React.FC = () => {
         {/* Category Specific Tab: Issues List with Filtering */}
         {activeTab !== 'overview' && activeTab !== 'pages' && (
           <div className="space-y-6">
+            {/* Show Page Metadata Inspector on SEO Tab too */}
+            {activeTab === 'seo' && pages.length > 0 && (
+              <PageMetadataInspector pages={pages} targetUrl={audit.targetUrl} />
+            )}
+
             {/* Filter Bar */}
             <div className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 shadow-sm">
               <div className="flex-1 relative">
