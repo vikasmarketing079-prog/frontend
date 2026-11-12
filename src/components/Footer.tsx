@@ -64,11 +64,6 @@ export const Footer: React.FC = () => {
                   Broken Link Checker
                 </Link>
               </li>
-              <li>
-                <Link to="/pricing" className="hover:text-blue-600 transition">
-                  Pricing Plans
-                </Link>
-              </li>
             </ul>
           </div>
 
