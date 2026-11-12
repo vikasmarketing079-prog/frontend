@@ -124,3 +124,6 @@ export const BusinessImpactCalculator: React.FC<BusinessImpactCalculatorProps> =
     </div>
   );
 };
+
+export default BusinessImpactCalculator;
+

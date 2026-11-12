@@ -112,3 +112,6 @@ export const CodeFixModal: React.FC<CodeFixModalProps> = ({ issueCode, url, onCl
     </div>
   );
 };
+
+export default CodeFixModal;
+

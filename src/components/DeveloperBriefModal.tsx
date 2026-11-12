@@ -126,3 +126,6 @@ ${item.affectedUrls.slice(0, 3).map((u) => `  - ${u}`).join('\n')}
     </div>
   );
 };
+
+export default DeveloperBriefModal;
+
