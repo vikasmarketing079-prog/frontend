@@ -7,6 +7,7 @@ import { ScoreCard } from '../components/ScoreCard.js';
 import { IssueCard } from '../components/IssueCard.js';
 import { ScanProgressBar } from '../components/ScanProgressBar.js';
 import { PageMetadataInspector } from '../components/PageMetadataInspector.js';
+import { CategoryDetailInspector } from '../components/CategoryDetailInspector.js';
 import {
   Download,
   Mail,
@@ -50,6 +51,10 @@ export const ReportPage: React.FC = () => {
   // Issue filter state
   const [selectedSeverity, setSelectedSeverity] = useState<string>('all');
   const [issueSearch, setIssueSearch] = useState<string>('');
+
+  // Page table filter state
+  const [pageSearch, setPageSearch] = useState<string>('');
+  const [pageStatusFilter, setPageStatusFilter] = useState<'all' | '200' | 'error' | 'missing_meta'>('all');
 
   // Email modal state
   const [emailModalOpen, setEmailModalOpen] = useState(false);
@@ -214,6 +219,24 @@ export const ReportPage: React.FC = () => {
       );
     }
 
+    return true;
+  });
+
+  const filteredPages = pages.filter((p) => {
+    if (pageStatusFilter === '200' && p.statusCode !== 200) return false;
+    if (pageStatusFilter === 'error' && p.statusCode < 400) return false;
+    if (pageStatusFilter === 'missing_meta' && p.title && p.metaDescription) return false;
+
+    if (pageSearch.trim()) {
+      const q = pageSearch.toLowerCase();
+      return (
+        p.url.toLowerCase().includes(q) ||
+        p.path.toLowerCase().includes(q) ||
+        (p.title && p.title.toLowerCase().includes(q)) ||
+        (p.metaDescription && p.metaDescription.toLowerCase().includes(q)) ||
+        (p.h1Text && p.h1Text.toLowerCase().includes(q))
+      );
+    }
     return true;
   });
 
@@ -559,6 +582,41 @@ export const ReportPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Pages Search and Filter Bar */}
+              <div className="mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <div className="flex-1 relative">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={pageSearch}
+                    onChange={(e) => setPageSearch(e.target.value)}
+                    placeholder="Search pages by URL, Title, or Meta Description..."
+                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-600 focus:bg-white"
+                  />
+                </div>
+
+                <div className="flex items-center gap-1.5 overflow-x-auto text-xs">
+                  {[
+                    { id: 'all', label: 'All Pages' },
+                    { id: '200', label: '200 OK' },
+                    { id: 'error', label: 'Errors (4xx/5xx)' },
+                    { id: 'missing_meta', label: 'Missing Meta Tags' },
+                  ].map((f) => (
+                    <button
+                      key={f.id}
+                      onClick={() => setPageStatusFilter(f.id as any)}
+                      className={`px-3 py-1.5 rounded-lg font-semibold transition whitespace-nowrap ${
+                        pageStatusFilter === f.id
+                          ? 'bg-blue-600 text-white shadow-sm'
+                          : 'bg-slate-100 text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-slate-50 text-slate-700 font-semibold uppercase text-[11px] border-b border-slate-200">
@@ -573,7 +631,7 @@ export const ReportPage: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {pages.map((p) => {
+                    {filteredPages.map((p) => {
                       const tLen = p.title?.trim().length || 0;
                       const dLen = p.metaDescription?.trim().length || 0;
                       const hLen = p.h1Text?.trim().length || 0;
@@ -701,9 +759,14 @@ export const ReportPage: React.FC = () => {
         {/* Category Specific Tab: Issues List with Filtering */}
         {activeTab !== 'overview' && activeTab !== 'pages' && (
           <div className="space-y-6">
-            {/* Show Page Metadata Inspector on SEO Tab too */}
+            {/* Show Page Metadata Inspector on SEO Tab */}
             {activeTab === 'seo' && pages.length > 0 && (
               <PageMetadataInspector pages={pages} targetUrl={audit.targetUrl} />
+            )}
+
+            {/* Show Category Detail Inspector for Performance, Security, Mobile, Broken Links */}
+            {(activeTab === 'performance' || activeTab === 'security' || activeTab === 'mobile' || activeTab === 'broken_links') && (
+              <CategoryDetailInspector category={activeTab} audit={audit} pages={pages} />
             )}
 
             {/* Filter Bar */}
