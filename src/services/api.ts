@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const rawBase = (import.meta as any).env?.VITE_API_URL || '';
+export const apiBase = rawBase ? `${rawBase.replace(/\/$/, '')}/api` : '/api';
+
 export const API = axios.create({
-  baseURL: '/api',
+  baseURL: apiBase,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -34,7 +37,8 @@ export const auditApi = {
   getIssues: (id: string, params?: { category?: string; severity?: string; search?: string }) =>
     API.get(`/audits/${id}/issues`, { params }),
   getPages: (id: string) => API.get(`/audits/${id}/pages`),
-  getPdfUrl: (id: string) => `/api/audits/${id}/pdf`,
+  getPdfUrl: (id: string) => `${apiBase}/audits/${id}/pdf`,
+  getCsvUrl: (id: string) => `${apiBase}/audits/${id}/export/csv`,
   rescan: (id: string) => API.post(`/audits/${id}/rescan`),
   compare: (id: string, previousAuditId: string) => API.get(`/audits/${id}/compare/${previousAuditId}`),
   emailReport: (id: string, email: string) => API.post(`/audits/reports/${id}/email`, { email }),
