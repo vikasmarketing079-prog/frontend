@@ -46,13 +46,6 @@ export const Navbar: React.FC = () => {
 
         {/* CENTER: Navigation Links */}
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-1.5">
-          <Link
-            to="/"
-            className="px-3.5 py-2 text-[15px] font-semibold text-slate-700 hover:text-slate-950 rounded-xl hover:bg-slate-100/70 transition-all duration-150"
-          >
-            Overview
-          </Link>
-
           {/* Tools Dropdown */}
           <div className="relative">
             <button
@@ -347,14 +340,7 @@ export const Navbar: React.FC = () => {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2">
-          <Link
-            to="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 rounded-lg"
-          >
-            Overview
-          </Link>
-          <div className="pt-2 pb-1 border-t border-slate-100">
+          <div className="pt-2 pb-1">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-3">
               Free Checkers
             </span>
