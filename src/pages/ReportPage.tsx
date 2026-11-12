@@ -8,6 +8,8 @@ import { IssueCard } from '../components/IssueCard.js';
 import { ScanProgressBar } from '../components/ScanProgressBar.js';
 import { PageMetadataInspector } from '../components/PageMetadataInspector.js';
 import { CategoryDetailInspector } from '../components/CategoryDetailInspector.js';
+import { BusinessImpactCalculator } from '../components/BusinessImpactCalculator.js';
+import { DeveloperBriefModal } from '../components/DeveloperBriefModal.js';
 import {
   Download,
   Mail,
@@ -30,6 +32,7 @@ import {
   Layers,
   FileDown,
   FileSpreadsheet,
+  Swords,
 } from 'lucide-react';
 
 export const ReportPage: React.FC = () => {
@@ -55,6 +58,9 @@ export const ReportPage: React.FC = () => {
   // Page table filter state
   const [pageSearch, setPageSearch] = useState<string>('');
   const [pageStatusFilter, setPageStatusFilter] = useState<'all' | '200' | 'error' | 'missing_meta'>('all');
+
+  // Developer Brief modal state
+  const [showDevBriefModal, setShowDevBriefModal] = useState(false);
 
   // Email modal state
   const [emailModalOpen, setEmailModalOpen] = useState(false);
@@ -311,6 +317,24 @@ export const ReportPage: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center gap-2.5">
+              <Link
+                to={`/battle?urlA=${encodeURIComponent(audit.targetUrl)}`}
+                className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-semibold text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5"
+                title="Launch head-to-head battle against a competitor"
+              >
+                <Swords className="w-4 h-4" />
+                <span>Battle Competitor</span>
+              </Link>
+
+              <button
+                onClick={() => setShowDevBriefModal(true)}
+                className="px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm shadow-sm transition flex items-center gap-1.5"
+                title="Generate Markdown task brief for developers (GitHub/Jira/Upwork)"
+              >
+                <FileText className="w-4 h-4 text-blue-400" />
+                <span>Developer Brief</span>
+              </button>
+
               <a
                 href={`/api/audits/${audit._id}/pdf`}
                 target="_blank"
@@ -484,9 +508,15 @@ export const ReportPage: React.FC = () => {
           ))}
         </div>
 
-        {/* Tab: Overview (Prioritized Action Plan) */}
+        {/* Tab: Overview (Prioritized Action Plan & Revenue ROI Calculator) */}
         {activeTab === 'overview' && (
           <div className="space-y-8">
+            <BusinessImpactCalculator
+              healthScore={audit.healthScore}
+              criticalIssuesCount={audit.issuesSummary.critical}
+              averageResponseTimeMs={pages[0]?.responseTimeMs || 450}
+            />
+
             <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <div>
@@ -871,6 +901,14 @@ export const ReportPage: React.FC = () => {
               </form>
             </div>
           </div>
+        )}
+        {/* Developer Brief Modal */}
+        {showDevBriefModal && (
+          <DeveloperBriefModal
+            audit={audit}
+            actionPlan={actionPlan}
+            onClose={() => setShowDevBriefModal(false)}
+          />
         )}
       </div>
     </div>

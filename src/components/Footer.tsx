@@ -45,6 +45,11 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/battle" className="text-orange-600 hover:text-orange-700 font-semibold transition flex items-center gap-1">
+                  <span>⚔️ Competitor Battle</span>
+                </Link>
+              </li>
+              <li>
                 <Link to="/tools/seo" className="hover:text-blue-600 transition">
                   SEO Checker
                 </Link>

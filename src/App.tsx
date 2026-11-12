@@ -5,6 +5,7 @@ import { MainLayout } from './layouts/MainLayout.js';
 import { HomePage } from './pages/HomePage.js';
 import { ReportPage } from './pages/ReportPage.js';
 import { ComparePage } from './pages/ComparePage.js';
+import { CompetitorBattlePage } from './pages/CompetitorBattlePage.js';
 import { ToolsPage } from './pages/tools/ToolsPage.js';
 import { PricingPage } from './pages/PricingPage.js';
 import { AboutPage, ContactPage } from './pages/AboutPage.js';
@@ -32,6 +33,7 @@ export const App: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/report/:id" element={<ReportPage />} />
             <Route path="/demo" element={<ReportPage />} />
+            <Route path="/battle" element={<CompetitorBattlePage />} />
             <Route path="/compare/:id/:previousId" element={<ComparePage />} />
 
             {/* Individual Diagnostic Tools */}

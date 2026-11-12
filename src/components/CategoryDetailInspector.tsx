@@ -412,3 +412,4 @@ export const CategoryDetailInspector: React.FC<CategoryDetailInspectorProps> = (
 
   return null;
 };
+

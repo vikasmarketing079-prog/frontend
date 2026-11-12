@@ -48,6 +48,7 @@ export const toolsApi = {
   checkSsl: (url: string) => API.post('/tools/ssl', { url }),
   checkMobile: (url: string) => API.post('/tools/mobile', { url }),
   checkSecurityHeaders: (url: string) => API.post('/tools/security-headers', { url }),
+  runBattle: (urlA: string, urlB: string) => API.post('/tools/battle', { urlA, urlB }),
 };
 
 export const authApi = {

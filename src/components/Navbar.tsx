@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   ArrowRight,
+  Swords,
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -67,6 +68,22 @@ export const Navbar: React.FC = () => {
 
             {toolsOpen && (
               <div className="absolute top-full left-0 mt-2 w-76 bg-white border border-slate-200 rounded-2xl shadow-xl shadow-slate-900/5 p-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                <Link
+                  to="/battle"
+                  className="flex items-center gap-3 p-2.5 rounded-xl bg-orange-50/70 hover:bg-orange-100/70 text-orange-950 transition border border-orange-200/60 mb-1"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-orange-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <Swords className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                      Competitor Battle
+                      <span className="text-[9px] uppercase px-1.5 py-0.5 font-mono font-bold bg-orange-600 text-white rounded">NEW</span>
+                    </div>
+                    <div className="text-[11px] text-slate-500">Live URL vs Competitor round-by-round</div>
+                  </div>
+                </Link>
+
                 <Link
                   to="/tools/seo"
                   className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 text-slate-700 hover:text-slate-900 transition"
@@ -147,6 +164,15 @@ export const Navbar: React.FC = () => {
               </div>
             )}
           </div>
+
+          <Link
+            to="/battle"
+            className="px-3.5 py-2 text-sm font-semibold text-orange-600 hover:text-orange-700 rounded-lg hover:bg-orange-50/70 transition flex items-center gap-1.5"
+          >
+            <Swords className="w-4 h-4 text-orange-500" />
+            <span>Battle</span>
+            <span className="text-[9px] uppercase px-1.5 py-0.2 font-mono font-bold bg-orange-600 text-white rounded">NEW</span>
+          </Link>
 
           <Link
             to="/pricing"
@@ -277,6 +303,15 @@ export const Navbar: React.FC = () => {
             </span>
             <div className="mt-1 space-y-1">
               <Link
+                to="/battle"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-orange-600 bg-orange-50/70 hover:bg-orange-100/70 rounded-lg"
+              >
+                <Swords className="w-3.5 h-3.5" />
+                <span>Competitor Battle Arena</span>
+                <span className="text-[9px] uppercase px-1 py-0.2 font-mono font-bold bg-orange-600 text-white rounded ml-auto">NEW</span>
+              </Link>
+              <Link
                 to="/tools/seo"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 rounded-lg"
@@ -320,6 +355,15 @@ export const Navbar: React.FC = () => {
               </Link>
             </div>
           </div>
+          <Link
+            to="/battle"
+            className="px-3.5 py-2 text-sm font-semibold text-orange-600 hover:text-orange-700 rounded-lg hover:bg-orange-50/70 transition flex items-center gap-1.5"
+          >
+            <Swords className="w-4 h-4 text-orange-500" />
+            <span>Battle</span>
+            <span className="text-[9px] uppercase px-1.5 py-0.2 font-mono font-bold bg-orange-600 text-white rounded">NEW</span>
+          </Link>
+
           <Link
             to="/pricing"
             onClick={() => setMobileMenuOpen(false)}

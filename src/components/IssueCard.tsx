@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AuditIssueItem } from '../types/index.js';
+import { CodeFixModal } from './CodeFixModal.js';
 import {
   AlertCircle,
   AlertTriangle,
@@ -9,6 +10,7 @@ import {
   ExternalLink,
   Wrench,
   HelpCircle,
+  Code2,
 } from 'lucide-react';
 
 interface IssueCardProps {
@@ -18,6 +20,7 @@ interface IssueCardProps {
 
 export const IssueCard: React.FC<IssueCardProps> = ({ issue, onToggleResolved }) => {
   const [expanded, setExpanded] = useState(issue.severity === 'critical' || issue.severity === 'high');
+  const [showCodeModal, setShowCodeModal] = useState(false);
 
   const severityConfig = {
     critical: {
@@ -148,13 +151,32 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, onToggleResolved })
           {/* Recommended fix */}
           <div className="flex items-start gap-2.5 bg-emerald-50/60 border border-emerald-200/60 p-3 rounded-xl">
             <Wrench className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
-            <div>
+            <div className="flex-1">
               <span className="text-[11px] font-bold text-emerald-900 uppercase tracking-wider block mb-0.5">
                 Recommended Fix
               </span>
               <p className="text-slate-700 leading-relaxed font-medium text-xs sm:text-sm">{issue.recommendation}</p>
             </div>
           </div>
+
+          {/* 1-Click Code Solution Button */}
+          <div className="pt-1 flex items-center justify-end">
+            <button
+              onClick={() => setShowCodeModal(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition"
+            >
+              <Code2 className="w-3.5 h-3.5" />
+              <span>⚡ 1-Click Ready Code Fix</span>
+            </button>
+          </div>
+
+          {showCodeModal && (
+            <CodeFixModal
+              issueCode={issue.issueCode}
+              url={issue.url}
+              onClose={() => setShowCodeModal(false)}
+            />
+          )}
         </div>
       )}
     </div>
