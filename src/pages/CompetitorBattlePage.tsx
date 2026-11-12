@@ -98,23 +98,23 @@ export const CompetitorBattlePage: React.FC = () => {
           </p>
 
           {/* Quick presets */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs">
-            <span className="text-slate-400 font-medium">Try instant preset battles:</span>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5 text-xs">
+            <span className="text-slate-500 font-semibold">Try instant preset battles:</span>
             <button
               onClick={() => loadPreset('https://stripe.com', 'https://paypal.com')}
-              className="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition"
+              className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold shadow-xs transition"
             >
               Stripe vs PayPal
             </button>
             <button
               onClick={() => loadPreset('https://github.com', 'https://gitlab.com')}
-              className="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition"
+              className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold shadow-xs transition"
             >
               GitHub vs GitLab
             </button>
             <button
               onClick={() => loadPreset('https://nike.com', 'https://adidas.com')}
-              className="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition"
+              className="px-3.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-800 font-semibold shadow-xs transition"
             >
               Nike vs Adidas
             </button>
@@ -122,57 +122,61 @@ export const CompetitorBattlePage: React.FC = () => {
         </div>
 
         {/* Dual URL Input Arena */}
-        <div className="bg-slate-50/70 border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-12">
-          <form onSubmit={handleStartBattle} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-11 gap-4 items-center">
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-12">
+          <form onSubmit={handleStartBattle} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-11 gap-4 sm:gap-6 items-center">
               {/* Site A Input */}
               <div className="md:col-span-5">
-                <label className="text-xs font-bold text-slate-700 block mb-1.5 flex items-center justify-between">
+                <label className="text-[14px] font-bold text-slate-900 block mb-2 flex items-center justify-between">
                   <span>Your Website (Site A)</span>
-                  <span className="text-[10px] font-mono font-normal text-blue-600">e.g. yourbrand.com</span>
+                  <span className="text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
+                    e.g. yourbrand.com
+                  </span>
                 </label>
                 <div className="relative">
-                  <Globe className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Globe className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
                     value={urlA}
                     onChange={(e) => setUrlA(e.target.value)}
                     placeholder="https://yourwebsite.com"
-                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50/60 focus:bg-white border border-slate-300 focus:border-blue-600 rounded-xl text-[15px] font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-100 transition shadow-xs"
                   />
                 </div>
               </div>
 
               {/* VS Center Badge */}
-              <div className="md:col-span-1 flex items-center justify-center pt-5 md:pt-0">
-                <div className="w-10 h-10 rounded-full bg-blue-600 text-white font-black text-xs flex items-center justify-center shadow-md">
+              <div className="md:col-span-1 flex items-center justify-center pt-2 md:pt-6">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-xs flex items-center justify-center shadow-md shadow-blue-500/25">
                   VS
                 </div>
               </div>
 
               {/* Site B Input */}
               <div className="md:col-span-5">
-                <label className="text-xs font-bold text-slate-700 block mb-1.5 flex items-center justify-between">
+                <label className="text-[14px] font-bold text-slate-900 block mb-2 flex items-center justify-between">
                   <span>Competitor Website (Site B)</span>
-                  <span className="text-[10px] font-mono font-normal text-rose-600">e.g. competitor.com</span>
+                  <span className="text-xs font-semibold text-orange-700 bg-orange-50 px-2.5 py-0.5 rounded-full border border-orange-200">
+                    e.g. competitor.com
+                  </span>
                 </label>
                 <div className="relative">
-                  <Globe className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Globe className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
                     value={urlB}
                     onChange={(e) => setUrlB(e.target.value)}
                     placeholder="https://competitor.com"
-                    className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 shadow-sm"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50/60 focus:bg-white border border-slate-300 focus:border-blue-600 rounded-xl text-[15px] font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-100 transition shadow-xs"
                   />
                 </div>
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <span>{error}</span>
               </div>
@@ -182,18 +186,18 @@ export const CompetitorBattlePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="py-3 px-8 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 mx-auto disabled:opacity-50"
+                className="py-3.5 px-9 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-[15px] shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2 mx-auto disabled:opacity-50"
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                     <span>Executing Live Head-to-Head Battle...</span>
                   </>
                 ) : (
                   <>
-                    <Swords className="w-4 h-4" />
+                    <Swords className="w-5 h-5" />
                     <span>Launch Competitor Battle</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-5 h-5" />
                   </>
                 )}
               </button>
@@ -232,15 +236,15 @@ export const CompetitorBattlePage: React.FC = () => {
               </div>
 
               {/* Head-to-Head Score Pill */}
-              <div className="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl border border-slate-200 shadow-sm font-mono">
+              <div className="flex items-center gap-4 bg-white px-6 py-3.5 rounded-2xl border border-slate-200 shadow-sm">
                 <div className="text-center">
-                  <span className="text-[10px] uppercase text-blue-600 font-bold block">Site A</span>
-                  <span className="text-2xl font-black text-slate-900">{battleData.siteA.score}</span>
+                  <span className="text-[11px] uppercase tracking-wider text-blue-600 font-extrabold block">Your Site</span>
+                  <span className="text-3xl font-black text-slate-900 tracking-tight">{battleData.siteA.score}</span>
                 </div>
                 <span className="text-slate-300 font-bold text-lg">vs</span>
                 <div className="text-center">
-                  <span className="text-[10px] uppercase text-rose-600 font-bold block">Site B</span>
-                  <span className="text-2xl font-black text-slate-900">{battleData.siteB.score}</span>
+                  <span className="text-[11px] uppercase tracking-wider text-orange-600 font-extrabold block">Competitor</span>
+                  <span className="text-3xl font-black text-slate-900 tracking-tight">{battleData.siteB.score}</span>
                 </div>
               </div>
             </div>
@@ -254,21 +258,21 @@ export const CompetitorBattlePage: React.FC = () => {
                     <Zap className="w-5 h-5 text-amber-500" />
                     <h4 className="text-base font-bold text-slate-900">Round 1: Speed & TTFB</h4>
                   </div>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${battleData.winners.speed === 'A' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
-                    Winner: {battleData.winners.speed === 'A' ? 'Site A' : battleData.winners.speed === 'B' ? 'Site B' : 'Tie'}
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide ${battleData.winners.speed === 'A' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-orange-50 text-orange-700 border border-orange-200'}`}>
+                    Winner: {battleData.winners.speed === 'A' ? 'Your Site' : battleData.winners.speed === 'B' ? 'Competitor' : 'Tie'}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase block mb-1">Your Speed</span>
-                    <span className="text-lg font-bold text-slate-900">{battleData.siteA.responseTimeMs}ms</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">{battleData.siteA.pageSizeKb} KB HTML</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Your Speed</span>
+                    <span className="text-xl font-extrabold text-slate-900">{battleData.siteA.responseTimeMs}ms</span>
+                    <span className="text-xs font-medium text-slate-500 block mt-0.5">{battleData.siteA.pageSizeKb} KB HTML</span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase block mb-1">Competitor Speed</span>
-                    <span className="text-lg font-bold text-slate-900">{battleData.siteB.responseTimeMs}ms</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">{battleData.siteB.pageSizeKb} KB HTML</span>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Competitor Speed</span>
+                    <span className="text-xl font-extrabold text-slate-900">{battleData.siteB.responseTimeMs}ms</span>
+                    <span className="text-xs font-medium text-slate-500 block mt-0.5">{battleData.siteB.pageSizeKb} KB HTML</span>
                   </div>
                 </div>
               </div>
@@ -280,21 +284,21 @@ export const CompetitorBattlePage: React.FC = () => {
                     <Search className="w-5 h-5 text-blue-500" />
                     <h4 className="text-base font-bold text-slate-900">Round 2: On-Page SEO</h4>
                   </div>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${battleData.winners.seo === 'A' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
-                    Winner: {battleData.winners.seo === 'A' ? 'Site A' : battleData.winners.seo === 'B' ? 'Site B' : 'Tie'}
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide ${battleData.winners.seo === 'A' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-orange-50 text-orange-700 border border-orange-200'}`}>
+                    Winner: {battleData.winners.seo === 'A' ? 'Your Site' : battleData.winners.seo === 'B' ? 'Competitor' : 'Tie'}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase block mb-1">Your Title & Meta</span>
-                    <span className="text-sm font-bold text-slate-900">{battleData.siteA.titleLength}c Title</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">{battleData.siteA.descLength}c Description</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Your Title & Meta</span>
+                    <span className="text-base font-extrabold text-slate-900 block">{battleData.siteA.titleLength} chars Title</span>
+                    <span className="text-xs font-medium text-slate-500 block mt-0.5">{battleData.siteA.descLength} chars Description</span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase block mb-1">Competitor Title & Meta</span>
-                    <span className="text-sm font-bold text-slate-900">{battleData.siteB.titleLength}c Title</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">{battleData.siteB.descLength}c Description</span>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Competitor Title & Meta</span>
+                    <span className="text-base font-extrabold text-slate-900 block">{battleData.siteB.titleLength} chars Title</span>
+                    <span className="text-xs font-medium text-slate-500 block mt-0.5">{battleData.siteB.descLength} chars Description</span>
                   </div>
                 </div>
               </div>
@@ -306,21 +310,21 @@ export const CompetitorBattlePage: React.FC = () => {
                     <Smartphone className="w-5 h-5 text-indigo-500" />
                     <h4 className="text-base font-bold text-slate-900">Round 3: Mobile Experience</h4>
                   </div>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${battleData.winners.mobile === 'A' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
-                    Winner: {battleData.winners.mobile === 'A' ? 'Site A' : battleData.winners.mobile === 'B' ? 'Site B' : 'Tie'}
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide ${battleData.winners.mobile === 'A' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-orange-50 text-orange-700 border border-orange-200'}`}>
+                    Winner: {battleData.winners.mobile === 'A' ? 'Your Site' : battleData.winners.mobile === 'B' ? 'Competitor' : 'Tie'}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase block mb-1">Your Mobile Score</span>
-                    <span className="text-lg font-bold text-emerald-600">{battleData.siteA.scores.mobile}/100</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">Responsive Viewport</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Your Mobile Score</span>
+                    <span className="text-xl font-extrabold text-emerald-600">{battleData.siteA.scores.mobile}/100</span>
+                    <span className="text-xs font-medium text-slate-500 block mt-0.5">Responsive Viewport</span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase block mb-1">Competitor Mobile</span>
-                    <span className="text-lg font-bold text-slate-900">{battleData.siteB.scores.mobile}/100</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">Responsive Viewport</span>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Competitor Mobile</span>
+                    <span className="text-xl font-extrabold text-slate-900">{battleData.siteB.scores.mobile}/100</span>
+                    <span className="text-xs font-medium text-slate-500 block mt-0.5">Responsive Viewport</span>
                   </div>
                 </div>
               </div>
@@ -332,21 +336,21 @@ export const CompetitorBattlePage: React.FC = () => {
                     <ShieldCheck className="w-5 h-5 text-emerald-500" />
                     <h4 className="text-base font-bold text-slate-900">Round 4: Security & Headers</h4>
                   </div>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${battleData.winners.security === 'A' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
-                    Winner: {battleData.winners.security === 'A' ? 'Site A' : battleData.winners.security === 'B' ? 'Site B' : 'Tie'}
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wide ${battleData.winners.security === 'A' ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-orange-50 text-orange-700 border border-orange-200'}`}>
+                    Winner: {battleData.winners.security === 'A' ? 'Your Site' : battleData.winners.security === 'B' ? 'Competitor' : 'Tie'}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase block mb-1">Your Security</span>
-                    <span className="text-lg font-bold text-slate-900">{battleData.siteA.scores.security}/100</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">{battleData.siteA.isHttps ? 'HTTPS Active' : 'HTTP'}</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Your Security</span>
+                    <span className="text-xl font-extrabold text-slate-900">{battleData.siteA.scores.security}/100</span>
+                    <span className="text-xs font-medium text-slate-500 block mt-0.5">{battleData.siteA.isHttps ? 'HTTPS Active' : 'HTTP'}</span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                    <span className="text-[10px] text-slate-400 uppercase block mb-1">Competitor Security</span>
-                    <span className="text-lg font-bold text-slate-900">{battleData.siteB.scores.security}/100</span>
-                    <span className="text-[10px] text-slate-500 block mt-0.5">{battleData.siteB.isHttps ? 'HTTPS Active' : 'HTTP'}</span>
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">Competitor Security</span>
+                    <span className="text-xl font-extrabold text-slate-900">{battleData.siteB.scores.security}/100</span>
+                    <span className="text-xs font-medium text-slate-500 block mt-0.5">{battleData.siteB.isHttps ? 'HTTPS Active' : 'HTTP'}</span>
                   </div>
                 </div>
               </div>
