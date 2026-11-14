@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const rawBase = (import.meta as any).env?.VITE_API_URL || '';
+const isBrowser = typeof window !== 'undefined';
+const rawBase =
+  (import.meta as any).env?.VITE_API_URL ||
+  (isBrowser && window.location.hostname.includes('render.com')
+    ? 'https://siteaudit-backend-j08w.onrender.com'
+    : '');
 export const apiBase = rawBase ? `${rawBase.replace(/\/$/, '')}/api` : '/api';
 
 export const API = axios.create({
