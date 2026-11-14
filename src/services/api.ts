@@ -1,11 +1,21 @@
 import axios from 'axios';
 
 const isBrowser = typeof window !== 'undefined';
-const rawBase =
-  (import.meta as any).env?.VITE_API_URL ||
-  (isBrowser && window.location.hostname.includes('render.com')
-    ? 'https://siteaudit-backend-j08w.onrender.com'
-    : '');
+let rawBase = ((import.meta as any).env?.VITE_API_URL || '').trim();
+
+// Automatically correct the URL if it points to the old siteaudit-backend without -j08w
+if (
+  rawBase === 'https://siteaudit-backend.onrender.com' ||
+  rawBase === 'https://siteaudit-backend.onrender.com/' ||
+  rawBase === 'http://siteaudit-backend.onrender.com'
+) {
+  rawBase = 'https://siteaudit-backend-j08w.onrender.com';
+}
+
+if (!rawBase && isBrowser && window.location.hostname.includes('render.com')) {
+  rawBase = 'https://siteaudit-backend-j08w.onrender.com';
+}
+
 export const apiBase = rawBase ? `${rawBase.replace(/\/$/, '')}/api` : '/api';
 
 export const API = axios.create({
