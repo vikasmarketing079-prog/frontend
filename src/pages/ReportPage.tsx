@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { auditApi, API } from '../services/api.js';
 import { AuditRecord, AuditIssueItem, PrioritizedRecommendation, PageAuditItem } from '../types/index.js';
 import { HealthGauge } from '../components/HealthGauge.js';
@@ -36,7 +36,9 @@ import {
 } from 'lucide-react';
 
 export const ReportPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id: paramId } = useParams<{ id: string }>();
+  const location = useLocation();
+  const id = paramId || (location.pathname === '/demo' ? 'demo' : '');
   const navigate = useNavigate();
 
   const [audit, setAudit] = useState<AuditRecord | null>(null);
