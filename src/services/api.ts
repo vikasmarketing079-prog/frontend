@@ -5,10 +5,25 @@ export const apiBase = rawBase ? `${rawBase.replace(/\/$/, '')}/api` : '/api';
 
 export const API = axios.create({
   baseURL: apiBase,
+  timeout: 25000, // 25s timeout prevents UI from hanging indefinitely
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+// Response interceptor to give clear error messages instead of raw network failures
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+      return Promise.reject(new Error(`Server at ${apiBase} timed out. Please check if your Render backend is Live and awake.`));
+    }
+    if (!error.response && error.message === 'Network Error') {
+      return Promise.reject(new Error(`Cannot connect to backend (${apiBase}). Check your Render backend URL or CORS settings.`));
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Attach Authorization token from localStorage if available
 API.interceptors.request.use((config) => {
