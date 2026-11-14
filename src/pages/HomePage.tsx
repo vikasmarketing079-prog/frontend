@@ -65,9 +65,23 @@ export const HomePage: React.FC = () => {
       pagesScanned: 0,
     });
 
+    // Provide warm status update if cloud server is waking from sleep
+    const wakeTimer = setTimeout(() => {
+      setActiveScan((prev: any) =>
+        prev
+          ? {
+              ...prev,
+              currentStepMessage: 'Server is waking up (Render free tier wakes in ~30s)... Please hold on.',
+            }
+          : prev
+      );
+    }, 4000);
+
     try {
       const res = await auditApi.start({ url: formattedUrl, maxPages: 10 });
-      if (res.data.success && res.data.data) {
+      clearTimeout(wakeTimer);
+
+      if (res.data?.success && res.data?.data) {
         const auditId = res.data.data.auditId;
         setActiveScan((prev: any) => ({
           ...prev,
@@ -79,7 +93,7 @@ export const HomePage: React.FC = () => {
         const interval = setInterval(async () => {
           try {
             const progRes = await auditApi.getProgress(auditId);
-            if (progRes.data.success && progRes.data.data) {
+            if (progRes.data?.success && progRes.data?.data) {
               const audit = progRes.data.data;
               setActiveScan((prev: any) => ({ ...prev, ...audit }));
               if (audit.status === 'completed') {
@@ -96,6 +110,7 @@ export const HomePage: React.FC = () => {
                 clearInterval(interval);
                 setError(audit.errorMessage || 'Audit failed');
                 setLoading(false);
+                setActiveScan(null);
               }
             }
           } catch {
@@ -103,10 +118,18 @@ export const HomePage: React.FC = () => {
             navigate(`/report/${auditId}`);
           }
         }, 1200);
+      } else {
+        throw new Error(res.data?.error || 'Server did not return a valid audit session.');
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message || 'Failed to start audit.');
+      clearTimeout(wakeTimer);
+      setError(
+        err.response?.data?.error ||
+          err.message ||
+          'Failed to connect to audit server. If using Render free tier, server may be starting up.'
+      );
       setLoading(false);
+      setActiveScan(null);
     }
   };
 
