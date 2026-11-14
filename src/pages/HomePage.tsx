@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { auditApi } from '../services/api.js';
-import { generateClientAudit } from '../services/clientAuditEngine.js';
 import { ScanProgressBar } from '../components/ScanProgressBar.js';
 import {
   Search,
@@ -41,6 +40,15 @@ export const HomePage: React.FC = () => {
   const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [sampleTab, setSampleTab] = useState<'all' | 'seo' | 'performance' | 'security'>('all');
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('focus') === 'true') {
+      const el = document.getElementById('audit-url-input');
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el?.focus();
+    }
+  }, []);
+
   const handleStartAudit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url.trim()) {
@@ -59,74 +67,21 @@ export const HomePage: React.FC = () => {
     // Immediately activate the live scanner state in the right-side dashboard card
     setActiveScan({
       targetUrl: formattedUrl,
-      progressPercent: 20,
+      progressPercent: 15,
       status: 'crawling',
-      currentStepMessage: 'Connecting to server and initiating multi-page crawl...',
+      currentStepMessage: 'Connecting to live crawler engine...',
       pagesDiscovered: 1,
       pagesScanned: 0,
     });
 
-    // Fast deterministic client fallback executor to guarantee scans never hang
-    const runClientAuditFallback = () => {
-      const clientData = generateClientAudit(formattedUrl, 6);
-      const auditId = clientData.audit._id;
-
-      setTimeout(() => {
-        setActiveScan((prev: any) => ({
-          ...prev,
-          progressPercent: 45,
-          currentStepMessage: 'Robots.txt & XML Sitemap Discovered (Scanning pages...)',
-          pagesDiscovered: clientData.pages.length,
-          pagesScanned: 2,
-        }));
-      }, 700);
-
-      setTimeout(() => {
-        setActiveScan((prev: any) => ({
-          ...prev,
-          progressPercent: 75,
-          currentStepMessage: 'Multi-Viewport Rendering & Core Web Vitals Computed',
-          pagesDiscovered: clientData.pages.length,
-          pagesScanned: 4,
-        }));
-      }, 1500);
-
-      setTimeout(() => {
-        setActiveScan((prev: any) => ({
-          ...prev,
-          progressPercent: 95,
-          currentStepMessage: 'Prioritizing Action Plan & Health Scores...',
-          pagesDiscovered: clientData.pages.length,
-          pagesScanned: clientData.pages.length,
-        }));
-      }, 2300);
-
-      setTimeout(() => {
-        setActiveScan((prev: any) => ({
-          ...prev,
-          progressPercent: 100,
-          currentStepMessage: 'Audit complete! Opening your report...',
-        }));
-        setTimeout(() => {
-          navigate(`/report/${auditId}`);
-        }, 500);
-      }, 3000);
-    };
-
-    // Race backend with a fast 2.5s timeout. If backend is asleep or unreachable, fallback instantly!
-    const backendPromise = auditApi.start({ url: formattedUrl, maxPages: 10 });
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Backend timeout')), 2500)
-    );
-
     try {
-      const res: any = await Promise.race([backendPromise, timeoutPromise]);
-      if (res?.data?.success && res?.data?.data) {
+      const res = await auditApi.start({ url: formattedUrl, maxPages: 10 });
+      if (res.data?.success && res.data?.data) {
         const auditId = res.data.data.auditId;
         setActiveScan((prev: any) => ({
           ...prev,
           ...res.data.data,
-          progressPercent: Math.max(prev?.progressPercent || 20, 25),
+          progressPercent: Math.max(prev?.progressPercent || 15, 20),
         }));
 
         // Poll progress until complete or redirect
@@ -148,20 +103,22 @@ export const HomePage: React.FC = () => {
                 }, 600);
               } else if (audit.status === 'failed') {
                 clearInterval(interval);
-                runClientAuditFallback();
+                setError(audit.errorMessage || 'Audit failed');
+                setLoading(false);
+                setActiveScan(null);
               }
             }
-          } catch {
-            clearInterval(interval);
-            navigate(`/report/${auditId}`);
+          } catch (pollErr: any) {
+            console.warn('Progress poll error, retrying:', pollErr.message);
           }
-        }, 1200);
+        }, 1000);
       } else {
-        runClientAuditFallback();
+        throw new Error(res.data?.error || 'Failed to initialize audit session.');
       }
-    } catch {
-      // Backend asleep, slow, or offline -> seamlessly run instant client audit
-      runClientAuditFallback();
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message || 'Failed to start audit.');
+      setLoading(false);
+      setActiveScan(null);
     }
   };
 
@@ -281,6 +238,7 @@ export const HomePage: React.FC = () => {
                       <Search className="w-4 h-4 text-slate-400" />
                     </div>
                     <input
+                      id="audit-url-input"
                       type="text"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}

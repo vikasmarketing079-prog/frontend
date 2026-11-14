@@ -73,24 +73,6 @@ export const ReportPage: React.FC = () => {
   const fetchAuditData = async () => {
     if (!id) return;
 
-    // 1. Instant rendering from local client storage if available
-    const localDataStr = localStorage.getItem(`siteaudit_${id}`);
-    if (localDataStr) {
-      try {
-        const parsed = JSON.parse(localDataStr);
-        if (parsed.audit) {
-          setAudit(parsed.audit);
-          setActionPlan(parsed.actionPlan || []);
-          setIssues(parsed.issues || []);
-          setPages(parsed.pages || []);
-          setLoading(false);
-          return;
-        }
-      } catch (e) {
-        console.warn('Failed parsing local audit data:', e);
-      }
-    }
-
     try {
       let res;
       if (id === 'demo') {
@@ -99,7 +81,7 @@ export const ReportPage: React.FC = () => {
         res = await auditApi.getById(id);
       }
 
-      if (res.data.success && res.data.data) {
+      if (res.data?.success && res.data?.data) {
         const auditData = res.data.data.audit;
         setAudit(auditData);
         setActionPlan(res.data.data.actionPlan || []);
@@ -109,30 +91,15 @@ export const ReportPage: React.FC = () => {
           auditApi.getPages(auditData._id),
         ]);
 
-        if (issuesRes.data.success) {
+        if (issuesRes.data?.success) {
           setIssues(issuesRes.data.data || []);
         }
-        if (pagesRes.data.success) {
+        if (pagesRes.data?.success) {
           setPages(pagesRes.data.data || []);
         }
       }
     } catch (err: any) {
-      // 2. Secondary fallback to last successful scan if network fails
-      const lastDataStr = localStorage.getItem('siteaudit_last');
-      if (lastDataStr) {
-        try {
-          const parsed = JSON.parse(lastDataStr);
-          if (parsed.audit) {
-            setAudit(parsed.audit);
-            setActionPlan(parsed.actionPlan || []);
-            setIssues(parsed.issues || []);
-            setPages(parsed.pages || []);
-            setError('');
-            return;
-          }
-        } catch {}
-      }
-      setError(err.response?.data?.error || err.message || 'Failed to load audit report.');
+      setError(err.response?.data?.error || err.message || 'Failed to load real audit report.');
     } finally {
       setLoading(false);
     }
