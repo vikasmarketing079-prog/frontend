@@ -100,7 +100,7 @@ export const HomePage: React.FC = () => {
                 }));
                 setTimeout(() => {
                   navigate(`/report/${auditId}`);
-                }, 600);
+                }, 300);
               } else if (audit.status === 'failed') {
                 clearInterval(interval);
                 setError(audit.errorMessage || 'Audit failed');
@@ -111,7 +111,7 @@ export const HomePage: React.FC = () => {
           } catch (pollErr: any) {
             console.warn('Progress poll error, retrying:', pollErr.message);
           }
-        }, 1000);
+        }, 500);
       } else {
         throw new Error(res.data?.error || 'Failed to initialize audit session.');
       }
